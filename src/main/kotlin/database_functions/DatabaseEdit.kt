@@ -1,12 +1,5 @@
 package database_functions
 
-import attributePictures
-import attributes
-import data_classes.AttributeClass
-import data_classes.AttributePictureClass
-import data_classes.MalfunctionClass
-import data_classes.ValuesByMalfunctionClass
-import malfunctions
 import valuesByMalfunctions
 
 
@@ -17,28 +10,22 @@ fun editMalfunction(malfunctionName: String, newName: String): Boolean {
     if (newName == "")
         return false
 
-    val malfunction = findMalfunction(malfunctionName)
+    val malfunction = findMalfunction(malfunctionName) ?: return false
 
-    if (malfunction != null) {
-        malfunction.name = newName
-        return true
-    }
+    malfunction.name = newName
+    return true
 
-    return false
 }
 
 fun editAttribute(attributeName: String, newName: String): Boolean {
     if (attributeName == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        attribute.name = newName
-        return true
-    }
+    attribute.name = newName
+    return true
 
-    return false
 }
 
 fun editAvailableValue(attributeName: String, value: String, newAttributeName: String, newValueName: String): Boolean {
@@ -48,41 +35,37 @@ fun editAvailableValue(attributeName: String, value: String, newAttributeName: S
     if (newAttributeName == "" || newValueName == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        var isInNormalValues = false
+    var isInNormalValues = false
 
-        //Удаляем из возможных значений
-        for (currentValue in attribute.availableValues) {
-            if (currentValue.equals(value)) {
-                attribute.availableValues.remove(currentValue)
-                break
-            }
+    //Удаляем из возможных значений
+    for (currentValue in attribute.availableValues) {
+        if (currentValue.equals(value)) {
+            attribute.availableValues.remove(currentValue)
+            break
         }
-
-        //Удаляем из нормальных значений
-        for (currentValue in attribute.normalValues) {
-            if (currentValue.equals(value)) {
-                attribute.normalValues.remove(currentValue)
-                isInNormalValues = true
-                break
-            }
-        }
-
-        //Добавляем в возможные значения
-        attribute.availableValues.add(newValueName)
-
-        //Добавляем в нормальные значения, если в них было
-        if(isInNormalValues)
-            attribute.normalValues.add(newValueName)
-
-        attribute.name = newAttributeName
-
-        return true
     }
 
-    return false
+    //Удаляем из нормальных значений
+    for (currentValue in attribute.normalValues) {
+        if (currentValue.equals(value)) {
+            attribute.normalValues.remove(currentValue)
+            isInNormalValues = true
+            break
+        }
+    }
+
+    //Добавляем в возможные значения
+    attribute.availableValues.add(newValueName)
+
+    //Добавляем в нормальные значения, если в них было
+    if (isInNormalValues)
+        attribute.normalValues.add(newValueName)
+
+    attribute.name = newAttributeName
+
+    return true
 }
 
 fun editNormalValue(attributeName: String, value: String, newAttributeName: String, newValueName: String): Boolean {
@@ -92,86 +75,91 @@ fun editNormalValue(attributeName: String, value: String, newAttributeName: Stri
     if (newAttributeName == "" || newValueName == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        var isInNormalValues = false
+    attribute.name = newAttributeName
 
-        //Удаляем из возможных значений
-        for (currentValue in attribute.availableValues) {
-            if (currentValue.equals(value)) {
-                attribute.availableValues.remove(currentValue)
-                break
-            }
-        }
-
-        //Удаляем из нормальных значений
-        for (currentValue in attribute.normalValues) {
-            if (currentValue.equals(value)) {
-                attribute.normalValues.remove(currentValue)
-                isInNormalValues = true
-                break
-            }
-        }
-
-        //Добавляем в возможные значения
-        attribute.availableValues.add(newValueName)
-
-        //Добавляем в нормальные значения, если в них было
-        if(isInNormalValues)
-            attribute.normalValues.add(newValueName)
-
-        attribute.name = newAttributeName
-
-        return true
-    }
-
-    return false
-}
-
-fun editAttributePicture(malfunctionName: String, attributeName: String): Boolean {
-    if (malfunctionName == "" ||attributeName == "")
+    //Проверяем, принадлежит ли новое значение множеству возможных значений признака
+    if (!findValue(newValueName, attribute.availableValues))
         return false
 
-    val malfunction = findMalfunction(malfunctionName) ?: return false
-    findAttribute(attributeName) ?: return false
-
-    var picture = findAttributePicture(malfunctionName)
-
-    if (picture == null) {
-        picture = AttributePictureClass(malfunction)
-        attributePictures.add(picture)
+    //Проверяем, что новое значение не сломает логику существующих значений при неисправности
+    for (valuesByMalfunction in valuesByMalfunctions) {
+        for (lValue in valuesByMalfunction.values)
+            if (lValue.equals(newValueName))
+                return false
     }
 
-    val attribute = findAttributeInPicture(picture, attributeName)
-
-    if (attribute == null) {
-        picture.attributes.add(AttributeClass(0, attributeName))
-        return true
+    //Удаляем из нормальных значений
+    for (currentValue in attribute.normalValues) {
+        if (currentValue.equals(value)) {
+            attribute.normalValues.remove(currentValue)
+            break
+        }
     }
 
-    return false
+    //Добавляем новое нормальное значение
+    attribute.normalValues.add(newValueName)
+
+    return true
 }
 
-fun editValuesByMalfunction(malfunctionName: String, attributeName: String, value: String): Boolean {
+//TODO: Проверка, что новое нормальное значение не существует в множестве значений при неисправности
+
+fun editAttributePicture(malfunctionName: String, attributeName: String,
+                         newMalfunctionName: String, newAttributeName: String): Boolean {
+    if (malfunctionName == "" || attributeName == "")
+        return false
+
+    if (newMalfunctionName == "" || newAttributeName == "")
+        return false
+
+    val picture = findAttributePicture(malfunctionName) ?: return false
+    val attribute = findAttribute(attributeName) ?: return false
+
+    picture.malfunction.name = newMalfunctionName
+
+    val newAttribute = findAttribute(newAttributeName) ?: return false
+
+    picture.attributes.remove(attribute)
+    picture.attributes.add(newAttribute)
+
+    return true
+}
+
+fun editValuesByMalfunction(malfunctionName: String, attributeName: String, value: String,
+                            newMalfunctionName: String, newAttributeName: String, newValueName: String): Boolean {
+
     if (malfunctionName == "" || attributeName == "" || value == "")
         return false
 
-    val malfunction = findMalfunction(malfunctionName) ?: return false
-    val attribute = findAttribute(attributeName) ?: return false
-    if (!findValue(value, attribute.availableValues))
+    if (newMalfunctionName == "" || newAttributeName == "" || newValueName == "")
         return false
 
-    var valuesByMalfunction = findValuesByMalfunction(malfunctionName, attributeName)
+    val valuesByMalfunction = findValuesByMalfunction(malfunctionName, attributeName) ?: return false
 
-    if (valuesByMalfunction == null) {
-        valuesByMalfunction = ValuesByMalfunctionClass(malfunction, attribute)
-        valuesByMalfunctions.add(valuesByMalfunction)
-    }
+    valuesByMalfunction.malfunction.name = newMalfunctionName
+    valuesByMalfunction.attribute.name = newAttributeName
 
-    if (findValueInValuesByMalfunction(valuesByMalfunction.values, value) == null) {
-        valuesByMalfunction.values.add(value)
-        return true
+    //Проверяем, что новое значение присутствует в множестве допустимых значений
+    if (!findValue(newValueName, valuesByMalfunction.attribute.availableValues))
+        return false
+
+    for (lValue in valuesByMalfunction.values) {
+        // ^v^v^ Ищем позицию значения в значениях при неисправности
+        if (lValue.equals(value)) {
+            //Если значение не из нормальных
+            return if (!findValue(newValueName, valuesByMalfunction.attribute.normalValues)) {
+                //То удаляем старое
+                valuesByMalfunction.values.remove(lValue)
+                //И добавляем новое
+                valuesByMalfunction.values.add(newValueName)
+                true
+            } else {
+                false
+            }
+        }
+
     }
 
     return false

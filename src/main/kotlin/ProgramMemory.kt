@@ -1,5 +1,6 @@
 import data_classes.AttributeClass
 import data_classes.AttributePictureClass
+import data_classes.DiagnosticsClass
 import data_classes.MalfunctionClass
 import data_classes.ValuesByMalfunctionClass
 
@@ -22,3 +23,5 @@ val valuesByMalfunctions: ArrayList<ValuesByMalfunctionClass> = ArrayList()
     get() {
         return  field
     }
+
+val diagnostics: ArrayList<DiagnosticsClass> = ArrayList()

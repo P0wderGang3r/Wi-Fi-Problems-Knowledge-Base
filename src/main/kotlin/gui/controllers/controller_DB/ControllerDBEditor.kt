@@ -1,10 +1,10 @@
-package windows.controllers.ControllerDB
+package gui.controllers.controller_DB
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.Controller
 
-import windows.controllers.ControllerDB.ControllerDBInteractions.*
+import gui.controllers.controller_DB.ControllerDBInteractions.*
 
 class ControllerDBEditor: Controller() {
     var currentDBController: ControllerDBInteractions = NULL
@@ -41,7 +41,7 @@ class ControllerDBEditor: Controller() {
         numberOfFields = currentDBController.getNumberOfFields()
     }
 
-    fun getList(): List<ControllerCrutch> {
+    fun getList(): List<ControllerDBCrutch> {
         return currentDBController.getList()
     }
 

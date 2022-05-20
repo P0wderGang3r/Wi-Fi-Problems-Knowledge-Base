@@ -1,4 +1,4 @@
-package windows.controllers
+package gui.controllers
 
 import tornadofx.Controller
 

@@ -1,8 +1,8 @@
-package windows.controllers.ControllerDB
+package gui.controllers.controller_DB
 
-class ControllerCrutch(val firstValue: String,
-                       val secondValue: String,
-                       val thirdValue: String)
+class ControllerDBCrutch(val firstValue: String,
+                         val secondValue: String,
+                         val thirdValue: String)
 {
     @JvmName("getFirstValue1")
     fun getFirstValue(): String {

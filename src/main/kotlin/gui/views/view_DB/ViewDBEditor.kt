@@ -1,15 +1,15 @@
-package windows.view_centers.ViewDB
+package gui.views.view_DB
 
 import javafx.collections.FXCollections
 import tornadofx.*
-import windows.controllers.ControllerDB.ControllerCrutch
-import windows.controllers.ControllerDB.ControllerDBEditor
+import gui.controllers.controller_DB.ControllerDBCrutch
+import gui.controllers.controller_DB.ControllerDBEditor
 
 class ViewDBEditor: View() {
     private val sideController: ControllerDBEditor by inject()
 
     override val root = borderpane {
-        val tableData = FXCollections.observableArrayList<ControllerCrutch>()
+        val tableData = FXCollections.observableArrayList<ControllerDBCrutch>()
 
         left = listview(sideController.values) {
             minWidth = 180.0
@@ -24,24 +24,24 @@ class ViewDBEditor: View() {
                     columnResizePolicy = SmartResize.POLICY
 
                     if (sideController.numberOfFields == 1) {
-                        column(sideController.namesOfFields[0], ControllerCrutch::getFirstValue)
+                        column(sideController.namesOfFields[0], ControllerDBCrutch::getFirstValue)
                             .weightedWidth(sideController.weightsOfFields[0])
                     }
 
                     if (sideController.numberOfFields == 2) {
-                        column(sideController.namesOfFields[0], ControllerCrutch::getFirstValue)
+                        column(sideController.namesOfFields[0], ControllerDBCrutch::getFirstValue)
                             .weightedWidth(sideController.weightsOfFields[0])
-                        column(sideController.namesOfFields[1], ControllerCrutch::getSecondValue)
+                        column(sideController.namesOfFields[1], ControllerDBCrutch::getSecondValue)
                             .weightedWidth(sideController.weightsOfFields[1])
 
                     }
 
                     if (sideController.numberOfFields == 3) {
-                        column(sideController.namesOfFields[0], ControllerCrutch::getFirstValue)
+                        column(sideController.namesOfFields[0], ControllerDBCrutch::getFirstValue)
                             .weightedWidth(sideController.weightsOfFields[0])
-                        column(sideController.namesOfFields[1], ControllerCrutch::getSecondValue)
+                        column(sideController.namesOfFields[1], ControllerDBCrutch::getSecondValue)
                             .weightedWidth(sideController.weightsOfFields[1])
-                        column(sideController.namesOfFields[2], ControllerCrutch::getThirdValue)
+                        column(sideController.namesOfFields[2], ControllerDBCrutch::getThirdValue)
                             .weightedWidth(sideController.weightsOfFields[2])
                     }
 
@@ -96,6 +96,6 @@ class ViewDBEditor: View() {
 
         }
 
-        center = tableview<ControllerCrutch> {}
+        center = tableview<ControllerDBCrutch> {}
     }
 }

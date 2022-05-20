@@ -1,6 +1,5 @@
-import database_functions.initDataBase
 import tornadofx.launch
-import windows.MyApp
+import gui.MyApp
 
 fun main(args: Array<String>) {
     launch<MyApp>(args)

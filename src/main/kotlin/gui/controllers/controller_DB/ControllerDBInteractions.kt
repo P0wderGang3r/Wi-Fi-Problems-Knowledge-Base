@@ -1,10 +1,12 @@
-package windows.controllers.ControllerDB
+package gui.controllers.controller_DB
 
 import malfunctions
 import attributes
 import attributePictures
 import database_functions.*
 import valuesByMalfunctions
+import java.util.*
+import kotlin.collections.ArrayList
 
 enum class ControllerDBInteractions {
     NULL {
@@ -20,7 +22,7 @@ enum class ControllerDBInteractions {
             return emptyList()
         }
 
-        override fun getList(): List<ControllerCrutch> {
+        override fun getList(): List<ControllerDBCrutch> {
             return emptyList()
         }
 
@@ -36,16 +38,18 @@ enum class ControllerDBInteractions {
 
         }
     },
+
+
     MALFUNCTION {
 
         private val namesOfFields = listOf("Неисправности", "Error", "Error")
         private val weightsOfFields = listOf(1.0, 0.0, 0.0)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (malfunction in malfunctions) {
-                result.add(ControllerCrutch(malfunction.name, "", ""))
+                result.add(ControllerDBCrutch(malfunction.name, "", ""))
             }
 
             return result
@@ -64,15 +68,15 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addMalfunction(values[0])
+            addMalfunction(values[0].lowercase(Locale.getDefault()))
         }
 
         override fun removeFromList(values: List<String>) {
-            removeMalfunction(values[0])
+            removeMalfunction(values[0].lowercase(Locale.getDefault()))
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editMalfunction(defaultValues[0], values[0])
+            editMalfunction(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
         }
     },
 
@@ -82,11 +86,11 @@ enum class ControllerDBInteractions {
         private val namesOfFields = listOf("Признаки", "Error", "Error")
         private val weightsOfFields = listOf(1.0, 0.0, 0.0)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (attribute in attributes) {
-                result.add(ControllerCrutch(attribute.name, "", ""))
+                result.add(ControllerDBCrutch(attribute.name, "", ""))
             }
 
             return result
@@ -105,15 +109,15 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addAttribute(values[0])
+            addAttribute(values[0].lowercase(Locale.getDefault()))
         }
 
         override fun removeFromList(values: List<String>) {
-            removeAttribute(values[0])
+            removeAttribute(values[0].lowercase(Locale.getDefault()))
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editAttribute(defaultValues[0], values[0])
+            editAttribute(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
         }
     },
 
@@ -123,12 +127,12 @@ enum class ControllerDBInteractions {
         private val namesOfFields = listOf("Признаки", "Возможные значения", "Error")
         private val weightsOfFields = listOf(1.0, 0.5, 0.0)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (attribute in attributes) {
                 for (value in attribute.availableValues)
-                    result.add(ControllerCrutch(attribute.name, value, ""))
+                    result.add(ControllerDBCrutch(attribute.name, value, ""))
             }
 
             return result
@@ -147,15 +151,18 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addAvailableValue(values[0], values[1])
+            addAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
         }
 
         override fun removeFromList(values: List<String>) {
-            removeAvailableValue(values[0], values[1])
+            removeAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editAvailableValue(defaultValues[0], defaultValues[1], values[0], values[1])
+            editAvailableValue(
+                defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
+                values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
+            )
         }
     },
 
@@ -165,12 +172,12 @@ enum class ControllerDBInteractions {
         private val namesOfFields = listOf("Признаки", "Нормальные значения", "Error")
         private val weightsOfFields = listOf(1.0, 0.5, 0.0)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (attribute in attributes) {
                 for (value in attribute.normalValues)
-                    result.add(ControllerCrutch(attribute.name, value, ""))
+                    result.add(ControllerDBCrutch(attribute.name, value, ""))
             }
 
             return result
@@ -189,15 +196,24 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addNormalValue(values[0], values[1])
+            addNormalValue(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault())
+            )
         }
 
         override fun removeFromList(values: List<String>) {
-            removeNormalValue(values[0], values[1])
+            removeNormalValue(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault())
+            )
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editNormalValue(defaultValues[0], defaultValues[1], values[0], values[1])
+            editNormalValue(
+                defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
+                values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
+            )
         }
     },
 
@@ -207,12 +223,12 @@ enum class ControllerDBInteractions {
         private val namesOfFields = listOf("Неисправности", "Признаки", "Error")
         private val weightsOfFields = listOf(1.0, 1.0, 0.0)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (picture in attributePictures) {
                 for (attribute in picture.attributes)
-                    result.add(ControllerCrutch(picture.malfunction.name, attribute.name, ""))
+                    result.add(ControllerDBCrutch(picture.malfunction.name, attribute.name, ""))
             }
 
             return result
@@ -231,15 +247,26 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addAttributePicture(values[0], values[1])
+            addAttributePicture(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault())
+            )
         }
 
         override fun removeFromList(values: List<String>) {
-            removeAttributeFromPicture(values[0], values[1])
+            removeAttributeFromPicture(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault())
+            )
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            TODO("Not yet implemented")
+            editAttributePicture(
+                defaultValues[0].lowercase(Locale.getDefault()).lowercase(Locale.getDefault()),
+                defaultValues[1].lowercase(Locale.getDefault()).lowercase(Locale.getDefault()),
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault())
+            )
         }
     },
 
@@ -249,13 +276,13 @@ enum class ControllerDBInteractions {
         private val namesOfFields = listOf("Неисправности", "Признаки", "Значения")
         private val weightsOfFields = listOf(1.0, 1.0, 0.5)
 
-        override fun getList(): List<ControllerCrutch> {
-            val result: ArrayList<ControllerCrutch> = ArrayList()
+        override fun getList(): List<ControllerDBCrutch> {
+            val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
             for (valuesByMalfunction in valuesByMalfunctions) {
                 for (value in valuesByMalfunction.values)
                     result.add(
-                        ControllerCrutch(
+                        ControllerDBCrutch(
                             valuesByMalfunction.malfunction.name,
                             valuesByMalfunction.attribute.name,
                             value
@@ -279,19 +306,30 @@ enum class ControllerDBInteractions {
         }
 
         override fun addInList(values: List<String>) {
-            addValuesByMalfunction(values[0], values[1], values[2])
+            addValuesByMalfunction(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault()), values[2].lowercase(Locale.getDefault())
+            )
         }
 
         override fun removeFromList(values: List<String>) {
-            removeValueFromValuesByMalfunction(values[0], values[1], values[2])
+            removeValueFromValuesByMalfunction(
+                values[0].lowercase(Locale.getDefault()),
+                values[1].lowercase(Locale.getDefault()), values[2].lowercase(Locale.getDefault())
+            )
         }
 
         override fun editInList(defaultValues: List<String>, values: List<String>) {
-            TODO("Not yet implemented")
+            editValuesByMalfunction(
+                defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
+                defaultValues[2].lowercase(Locale.getDefault()),
+                values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()),
+                values[2].lowercase(Locale.getDefault())
+            )
         }
     };
 
-    abstract fun getList(): List<ControllerCrutch>
+    abstract fun getList(): List<ControllerDBCrutch>
     abstract fun getNamesOfFields(): List<String>
     abstract fun getNumberOfFields(): Int
     abstract fun getWeightsOfFields(): List<Double>

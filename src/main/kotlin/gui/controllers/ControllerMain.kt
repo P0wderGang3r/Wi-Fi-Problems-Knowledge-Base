@@ -1,10 +1,8 @@
-package windows.controllers
+package gui.controllers
 
 import database_functions.initDataBase
-import javafx.collections.FXCollections
+import diagnostics_functions.refreshDiagnostics
 import tornadofx.Controller
-import javafx.scene.control.MenuItem
-import tornadofx.action
 
 class ControllerMain: Controller() {
 

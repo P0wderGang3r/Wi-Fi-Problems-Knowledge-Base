@@ -1,22 +1,17 @@
-package windows
+package gui
 
-import windows.controllers.ControllerMain
+import gui.controllers.ControllerMain
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TabPane
 import tornadofx.*
-import windows.view_centers.ViewDB.ViewDBEditor
-import windows.view_centers.ViewDescription
-import windows.view_centers.ViewDiagnostics
-import windows.view_centers.ViewHelp
+import gui.views.view_DB.ViewDBEditor
+import gui.views.ViewDescription
+import gui.views.view_diagnostics.ViewDiagnostics
+import gui.views.ViewHelp
 
 class MainView: View() {
     private val controllerMain: ControllerMain by inject()
     private val pathToDB = SimpleStringProperty()
-
-    override fun onDock() {
-        currentWindow?.sizeToScene()
-        super.onDock()
-    }
 
     override var root = vbox {
         title = "ПС для диагностики неисправностей"
@@ -36,6 +31,7 @@ class MainView: View() {
 
             center = textfield(pathToDB) {
                 isFocusTraversable = true
+                isEditable = false
                 tooltip("Путь до базы знаний")
             }
 
@@ -43,14 +39,8 @@ class MainView: View() {
 
                 hbox {
                     paddingLeft = 10.0
-                    splitmenubutton("Загрузить") {
-                        tooltip("Загрузка по заданному пути / выбор папки с БЗ")
-
-                        item("Загрузить") {
-                            action {
-                                controllerMain.initDB(pathToDB.value)
-                            }
-                        }
+                    splitmenubutton("Открыть из...") {
+                        tooltip("Загрузка путём выбора папки с БЗ или загрузка из текущего каталога")
 
                         item("Открыть из...") {
                             action {
@@ -62,7 +52,17 @@ class MainView: View() {
                             }
                         }
 
+                        item("Загрузить из текущего каталога") {
+                            action {
+                                controllerMain.initDB(pathToDB.value)
+                            }
+                        }
+
                         action {
+                            val currentPath = chooseDirectory()
+                            if (currentPath != null)
+                                pathToDB.value = currentPath.toString()
+
                             controllerMain.initDB(pathToDB.value)
                         }
                     }
@@ -70,14 +70,8 @@ class MainView: View() {
 
                 hbox {
                     paddingLeft = 10.0
-                    splitmenubutton("Сохранить") {
-                        tooltip("Сохранение по текущему пути / выбор папки с БЗ")
-
-                        item("Сохранить") {
-                            action {
-                                controllerMain.saveDB(pathToDB.value)
-                            }
-                        }
+                    splitmenubutton("Сохранить в...") {
+                        tooltip("Сохранение путём выбора папки с БЗ или сохранение в текущий каталог")
 
                         item("Сохранить в...") {
                             action {
@@ -89,7 +83,19 @@ class MainView: View() {
                             }
                         }
 
-                        action { controllerMain.saveDB(pathToDB.value) }
+                        item("Сохранить в текущий каталог") {
+                            action {
+                                controllerMain.saveDB(pathToDB.value)
+                            }
+                        }
+
+                        action {
+                            val currentPath = chooseDirectory()
+                            if (currentPath != null)
+                                pathToDB.value = currentPath.toString()
+
+                            controllerMain.saveDB(pathToDB.value)
+                        }
                     }
                 }
 

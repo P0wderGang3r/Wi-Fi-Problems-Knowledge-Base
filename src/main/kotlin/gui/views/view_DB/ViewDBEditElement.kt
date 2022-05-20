@@ -1,52 +1,56 @@
-package windows.view_centers.ViewDB
+package gui.views.view_DB
 
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableView
 import tornadofx.*
-import windows.controllers.ControllerDB.ControllerCrutch
-import windows.controllers.ControllerDB.ControllerDBEditor
+import gui.controllers.controller_DB.ControllerDBCrutch
+import gui.controllers.controller_DB.ControllerDBEditor
+import gui.controllers.controller_DB.ControllerDBInteractions
 
-class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: TableView<ControllerCrutch>,
+class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: TableView<ControllerDBCrutch>,
                         attributes: List<String>): View() {
 
     private val arguments = listOf(SimpleStringProperty(attributes[0]),
         SimpleStringProperty(attributes[1]), SimpleStringProperty(attributes[2]))
 
     override val root = vbox {
-        title = "Редактирование элемента"
+        title = "Изменение значений элемента"
         minWidth = 100.0
         paddingAll = 10.0
         paddingBottom = 15.0
 
         if (sideController.numberOfFields == 1) {
-            label("${sideController.namesOfFields[0]}:")
+            label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
         }
 
         if (sideController.numberOfFields == 2) {
-            label("${sideController.namesOfFields[0]}:")
+            label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
-            label("${sideController.namesOfFields[1]}:")
+            if (sideController.currentDBController != ControllerDBInteractions.ATTRIBUTE_AVAILABLE_VALUES)
+                label("Изменить зависимость сорта \"${sideController.namesOfFields[1]}\":")
+            else
+                label("Изменить значение сорта \"${sideController.namesOfFields[1]}\":")
             textfield(arguments[1])
             label()
 
         }
 
         if (sideController.numberOfFields == 3) {
-            label("${sideController.namesOfFields[0]}:")
+            label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
-            label("${sideController.namesOfFields[1]}:")
+            label("Изменить значение сорта \"${sideController.namesOfFields[1]}\":")
             textfield(arguments[1])
             label()
-            label("${sideController.namesOfFields[2]}:")
+            label("Изменить значение сорта \"${sideController.namesOfFields[2]}\":")
             textfield(arguments[2])
             label()
         }
 
-        button("Изменить элемент") {
+        button("Применить изменения элемента") {
             action {
                 if(arguments[0].value == null)
                     arguments[0].value = ""
