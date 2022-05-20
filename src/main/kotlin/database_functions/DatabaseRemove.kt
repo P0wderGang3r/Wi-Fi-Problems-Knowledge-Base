@@ -3,8 +3,10 @@ package database_functions
 import attributePictures
 import attributes
 import malfunctions
-import valuesByMalfunctions
 
+/**
+ * Удаление неисправности
+ */
 fun removeMalfunction(malfunctionName: String): Boolean {
     val malfunction = findMalfunction(malfunctionName)
 
@@ -16,6 +18,9 @@ fun removeMalfunction(malfunctionName: String): Boolean {
     return false
 }
 
+/**
+ * Удаление признака
+ */
 fun removeAttribute(attributeName: String): Boolean {
     val attribute = findAttribute(attributeName)
 
@@ -27,6 +32,9 @@ fun removeAttribute(attributeName: String): Boolean {
     return false
 }
 
+/**
+ * Удаление возможного значения
+ */
 fun removeAvailableValue(attributeName: String, value: String): Boolean {
     val currentAttribute = findAttribute(attributeName)
 
@@ -41,6 +49,9 @@ fun removeAvailableValue(attributeName: String, value: String): Boolean {
     return false
 }
 
+/**
+ * Удаление нормального значения
+ */
 fun removeNormalValue(attributeName: String, value: String): Boolean {
     val currentAttribute = findAttribute(attributeName)
 
@@ -55,97 +66,41 @@ fun removeNormalValue(attributeName: String, value: String): Boolean {
     return false
 }
 
-private fun removeAttributePicture(malfunctionName: String): Boolean {
-    val currentMalfunction = findMalfunction(malfunctionName)
-
-    if (currentMalfunction != null) {
-        for (picture in attributePictures) {
-            if (picture.malfunction == currentMalfunction) {
-
-                attributePictures.remove(picture)
-                return true
-            }
-        }
-
-    }
-
-    return false
-}
-
+/**
+ * Удаление признака из признаков при неисправности
+ */
 fun removeAttributeFromPicture(malfunctionName: String, attributeName: String): Boolean {
-    val currentMalfunction = findMalfunction(malfunctionName)
-    val currentAttribute = findAttribute(attributeName)
+    val picture = findAttributePicture(malfunctionName) ?: return false
+    val attributeInPicture = findAttributeInPicture(picture, attributeName) ?: return false
 
-    if (currentMalfunction != null && currentAttribute != null) {
-        for (picture in attributePictures) {
-            if (picture.malfunction == currentMalfunction) {
+    picture.valuesByAttributes.remove(attributeInPicture)
 
-                for (attribute in picture.attributes) {
-                    if (attribute == currentAttribute) {
+    if (!picture.isEditable)
+        return false
 
-                        picture.attributes.remove(currentAttribute)
-
-                        if (picture.attributes.size == 0)
-                            return removeAttributePicture(malfunctionName)
-
-                        return true
-                    }
-                }
-
-            }
-        }
+    if (picture.valuesByAttributes.size == 0) {
+        attributePictures.remove(picture)
     }
 
-    return false
+    return true
 }
 
-private fun removeValuesByMalfunction(malfunctionName: String, attributeName: String): Boolean {
-    val currentMalfunction = findMalfunction(malfunctionName)
-    val currentAttribute = findAttribute(attributeName)
-
-    if (currentMalfunction != null && currentAttribute != null) {
-
-        //Ищем неисправность и признак, соответствующие искомому значению при неисправности
-        for (malfunctionClass in valuesByMalfunctions) {
-            if (malfunctionClass.malfunction == currentMalfunction &&
-                malfunctionClass.attribute == currentAttribute) {
-
-                //Если находим, то удаляем
-                valuesByMalfunctions.remove(malfunctionClass)
-                return true
-            }
-        }
-    }
-
-    return false
-
-}
-
+/**
+ * Удаление значения признака при неисправности
+ */
 fun removeValueFromValuesByMalfunction(malfunctionName: String, attributeName: String, value: String): Boolean {
-    val currentMalfunction = findMalfunction(malfunctionName)
-    val currentAttribute = findAttribute(attributeName)
 
-    if (currentMalfunction != null && currentAttribute != null) {
+    val picture = findAttributePicture(malfunctionName) ?: return false
 
-        //Ищем неисправность и признак, соответствующие искомому значению при неисправности
-        for (malfunctionClass in valuesByMalfunctions) {
-            if (malfunctionClass.malfunction == currentMalfunction &&
-                malfunctionClass.attribute == currentAttribute) {
+    if (!picture.isEditable)
+        return false
 
-                //Проверяем, существует ли уже такое значение
-                for (valueByMalfunction in malfunctionClass.values) {
-                    if (value.equals(valueByMalfunction)) {
-                        //Если да, то удаляем
-                        malfunctionClass.values.remove(value)
+    val attributeInPicture = findAttributeInPicture(picture, attributeName) ?: return false
 
-                        if (malfunctionClass.values.size == 0)
-                            return removeValuesByMalfunction(malfunctionName, attributeName)
-
-                        return true
-                    }
-                }
-
-            }
+    for (lValue in attributeInPicture.values) {
+        if (lValue == value) {
+            attributeInPicture.values.remove(value)
+            return true
         }
     }
 

@@ -5,6 +5,9 @@ import data_classes.DiagnosticsClass
 import diagnostics
 import gui.controllers.controller_diagnostics.ControllerDiagnosticsCrutch
 
+/**
+ * Сброс списка диагностируемых признаков
+ */
 fun refreshDiagnostics() {
     diagnostics.clear()
 
@@ -13,10 +16,16 @@ fun refreshDiagnostics() {
     }
 }
 
+/**
+ * Фиксация диагностируемого значения в памяти программного средства
+ */
 fun setDiagnosticsValue(row: Int, value: String) {
     diagnostics[row].value = value
 }
 
+/**
+ * Получение множества всех значений всех неисправностей
+ */
 fun getAttributeValues(): List<String> {
     val listOfValues: ArrayList<String> = ArrayList()
 
@@ -39,7 +48,9 @@ fun getAttributeValues(): List<String> {
     return listOfValues
 }
 
-
+/**
+ * Получение множества диагностируемых признаков с их значениями
+ */
 fun getDiagnosticsList(): List<ControllerDiagnosticsCrutch> {
     val result: ArrayList<ControllerDiagnosticsCrutch> = ArrayList()
 

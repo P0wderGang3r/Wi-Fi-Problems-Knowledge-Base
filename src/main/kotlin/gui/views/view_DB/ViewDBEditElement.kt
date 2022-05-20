@@ -1,11 +1,11 @@
 package gui.views.view_DB
 
-import javafx.beans.property.SimpleStringProperty
-import javafx.scene.control.TableView
-import tornadofx.*
 import gui.controllers.controller_DB.ControllerDBCrutch
 import gui.controllers.controller_DB.ControllerDBEditor
 import gui.controllers.controller_DB.ControllerDBInteractions
+import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.TableView
+import tornadofx.*
 
 class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: TableView<ControllerDBCrutch>,
                         attributes: List<String>): View() {
@@ -45,7 +45,7 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
             label("Изменить значение сорта \"${sideController.namesOfFields[1]}\":")
             textfield(arguments[1])
             label()
-            label("Изменить значение сорта \"${sideController.namesOfFields[2]}\":")
+            label("Изменить зависимость сорта \"${sideController.namesOfFields[2]}\":")
             textfield(arguments[2])
             label()
         }

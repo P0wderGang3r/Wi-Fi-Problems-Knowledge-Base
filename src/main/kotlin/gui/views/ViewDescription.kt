@@ -1,9 +1,9 @@
 package gui.views
 
+import gui.controllers.ControllerDescription
 import tornadofx.View
 import tornadofx.borderpane
 import tornadofx.label
-import gui.controllers.ControllerDescription
 
 class ViewDescription: View() {
     private val sideController: ControllerDescription by inject()

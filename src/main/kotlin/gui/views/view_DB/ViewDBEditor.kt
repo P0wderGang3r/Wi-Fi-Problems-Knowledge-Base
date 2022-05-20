@@ -1,9 +1,9 @@
 package gui.views.view_DB
 
-import javafx.collections.FXCollections
-import tornadofx.*
 import gui.controllers.controller_DB.ControllerDBCrutch
 import gui.controllers.controller_DB.ControllerDBEditor
+import javafx.collections.FXCollections
+import tornadofx.*
 
 class ViewDBEditor: View() {
     private val sideController: ControllerDBEditor by inject()

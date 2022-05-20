@@ -5,122 +5,118 @@ import attributes
 import data_classes.AttributeClass
 import data_classes.AttributePictureClass
 import data_classes.MalfunctionClass
-import data_classes.ValuesByMalfunctionClass
+import data_classes.ValuesByAttributeClass
 import malfunctions
-import valuesByMalfunctions
 
-
+/**
+ * Добавление новой неисправности
+ */
 fun addMalfunction(malfunctionName: String): Boolean {
     if (malfunctionName == "")
         return false
 
-    val malfunction = findMalfunction(malfunctionName)
+    findMalfunction(malfunctionName) ?: return false
 
-    if (malfunction == null) {
-        malfunctions.add(MalfunctionClass(0, malfunctionName))
-        return true
-    }
+    malfunctions.add(MalfunctionClass(0, malfunctionName))
 
-    return false
+    return true
 }
 
+/**
+ * Добавление нового признака
+ */
 fun addAttribute(attributeName: String): Boolean {
     if (attributeName == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute == null) {
-        attributes.add(AttributeClass(0, attributeName))
-        return true
-    }
-
-    return false
+    attributes.add(AttributeClass(0, attributeName))
+    return true
 }
 
+/**
+ * Добавление возможного значения
+ */
 fun addAvailableValue(attributeName: String, value: String): Boolean {
     if (attributeName == "" || value == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        if (findValue(value, attribute.availableValues)) {
-            return false
-        }
-
-        attribute.availableValues.add(value)
-        return true
+    //Если значение уже существует, то отказ
+    if (findValue(value, attribute.availableValues)) {
+        return false
     }
 
-    return false
+    attribute.availableValues.add(value)
+
+    //Ограничение - если нормального значения не существует,
+    // то добавляем в нормальные значения возможные значения
+    if (attribute.normalValues.size == 0)
+        attribute.normalValues.add(value)
+
+    return true
 }
 
+/**
+ * Добавление нормального значения
+ */
 fun addNormalValue(attributeName: String, value: String): Boolean {
     if (attributeName == "" || value == "")
         return false
 
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        if (!findValue(value, attribute.availableValues))
-            return false
+    //Если значение не из множества возможных значений, то отказ
+    if (!findValue(value, attribute.availableValues))
+        return false
 
-        if (findValue(value, attribute.normalValues))
-            return false
+    //Если значение уже существует, то отказ
+    if (findValue(value, attribute.normalValues))
+        return false
 
 
-        attribute.normalValues.add(value)
-        return true
-    }
-
-    return false
+    attribute.normalValues.add(value)
+    return true
 }
 
+/**
+ * Добавление нового признака в признаки при неисправности
+ */
 fun addAttributePicture(malfunctionName: String, attributeName: String): Boolean {
     if (malfunctionName == "" ||attributeName == "")
         return false
 
     val malfunction = findMalfunction(malfunctionName) ?: return false
-    findAttribute(attributeName) ?: return false
+    val attribute = findAttribute(attributeName) ?: return false
 
     var picture = findAttributePicture(malfunctionName)
 
+    //Если набор признаков при неисправности не существует, то добавляем
     if (picture == null) {
         picture = AttributePictureClass(malfunction)
         attributePictures.add(picture)
     }
 
-    val attribute = findAttributeInPicture(picture, attributeName)
+    //Если признаковая картина не редактируема, то отказ
+    if (!picture.isEditable)
+        return false
 
-    if (attribute == null) {
-        picture.attributes.add(AttributeClass(0, attributeName))
+    val attributeInPicture = findAttributeInPicture(picture, attributeName)
+
+    //Если признак в признаках при неисправности не существует, то добавляем
+    if (attributeInPicture == null) {
+        picture.valuesByAttributes.add(ValuesByAttributeClass(attribute))
         return true
     }
 
     return false
 }
 
+/**
+ * Заглушка
+ */
 fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value: String): Boolean {
-    if (malfunctionName == "" || attributeName == "" || value == "")
-        return false
-
-    val malfunction = findMalfunction(malfunctionName) ?: return false
-    val attribute = findAttribute(attributeName) ?: return false
-    if (!findValue(value, attribute.availableValues))
-        return false
-
-    var valuesByMalfunction = findValuesByMalfunction(malfunctionName, attributeName)
-
-    if (valuesByMalfunction == null) {
-        valuesByMalfunction = ValuesByMalfunctionClass(malfunction, attribute)
-        valuesByMalfunctions.add(valuesByMalfunction)
-    }
-
-    if (findValueInValuesByMalfunction(valuesByMalfunction.values, value) == null) {
-        valuesByMalfunction.values.add(value)
-        return true
-    }
-
-    return false
+    return true
 }

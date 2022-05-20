@@ -5,13 +5,12 @@ import attributes
 import data_classes.AttributeClass
 import data_classes.AttributePictureClass
 import data_classes.MalfunctionClass
-import data_classes.ValuesByMalfunctionClass
+import data_classes.ValuesByAttributeClass
 import malfunctions
-import valuesByMalfunctions
 import java.io.FileReader
 
-/*
- * Считывание текста из файла.
+/**
+ * Считывание текста из файла
  */
 fun initText(fileName: String): String {
     val reader: FileReader
@@ -32,6 +31,9 @@ fun initText(fileName: String): String {
     return lText
 }
 
+/**
+ * Разбиение прочитанного текста на набор строк
+ */
 fun initArrayOfText(fileName: String): ArrayList<String> {
     val text = initText(fileName)
 
@@ -42,6 +44,9 @@ fun initArrayOfText(fileName: String): ArrayList<String> {
     return lineList
 }
 
+/**
+ * Разбиение набора строк на первичный набор аргументов
+ */
 fun initInputStructure(fileName: String): ArrayList<List<String>> {
     val lineList = initArrayOfText(fileName)
 
@@ -54,6 +59,9 @@ fun initInputStructure(fileName: String): ArrayList<List<String>> {
     return inputStructure
 }
 
+/**
+ * Считывание множества неисправностей
+ */
 fun initMalfunctionClasses(path: String): Boolean {
     val rawMalfunctions = initInputStructure(path + "malfunctions.txt")
 
@@ -64,6 +72,9 @@ fun initMalfunctionClasses(path: String): Boolean {
     return true
 }
 
+/**
+ * Считывание множества признаков
+ */
 fun initAttributeClasses(path: String): Boolean {
     val rawAttributes = initInputStructure(path + "attributes.txt")
 
@@ -74,7 +85,9 @@ fun initAttributeClasses(path: String): Boolean {
     return true
 }
 
-
+/**
+ * Считывание множества возможных значений
+ */
 fun initAvailableValueClasses(path: String): Boolean {
     val rawValues = initInputStructure(path + "available_values.txt")
 
@@ -89,6 +102,9 @@ fun initAvailableValueClasses(path: String): Boolean {
     return true
 }
 
+/**
+ * Считывание множества нормальных значений
+ */
 fun initNormalValueClasses(path: String): Boolean {
     val rawValues = initInputStructure(path + "normal_values.txt")
 
@@ -103,6 +119,9 @@ fun initNormalValueClasses(path: String): Boolean {
     return true
 }
 
+/**
+ * Считывание множества признаков при неисправности
+ */
 fun initAttributePicture(path: String): Boolean {
     val rawPictures = initInputStructure(path + "attribute_picture.txt")
 
@@ -120,7 +139,8 @@ fun initAttributePicture(path: String): Boolean {
         for (attributeNum in attributesInPicture) {
             for (attribute in attributes) {
                 if (attribute.number == Integer.parseInt(attributeNum)) {
-                    attributePictures[attributePictures.size - 1].attributes.add(attribute)
+                    attributePictures[attributePictures.size - 1]
+                        .valuesByAttributes.add(ValuesByAttributeClass(attribute))
                 }
             }
         }
@@ -129,6 +149,9 @@ fun initAttributePicture(path: String): Boolean {
     return true
 }
 
+/**
+ * Считывание множества значений признаков при неисправности
+ */
 fun initValuesByMalfunction(path: String): Boolean {
     val rawValues = initInputStructure(path + "values_by_malfunction.txt")
 
@@ -139,20 +162,13 @@ fun initValuesByMalfunction(path: String): Boolean {
         for (attributePicture in attributePictures) {
             if (attributePicture.malfunction.number == numOfMalfunction) {
 
-                for (attribute in attributePicture.attributes) {
-                    if (attribute.number == numOfAttribute) {
-
-                        valuesByMalfunctions.add(
-                            ValuesByMalfunctionClass(
-                                attributePicture.malfunction,
-                                attribute
-                            )
-                        )
+                for (attributeInPicture in attributePicture.valuesByAttributes) {
+                    if (attributeInPicture.attribute.number == numOfAttribute) {
 
                         val values = valueByMalfunction[2].split(" ; ")
 
                         for (value in values) {
-                            valuesByMalfunctions[valuesByMalfunctions.size - 1].values.add(value)
+                            attributeInPicture.values.add(value)
                         }
 
                     }
@@ -166,8 +182,29 @@ fun initValuesByMalfunction(path: String): Boolean {
     return true
 }
 
+/**
+ * Привязка/создание картины признаков при исправной работе с нормальными значениями признаков
+ */
+fun initCorrectWorkAttributePicture() {
+    var currMalfunction = MalfunctionClass(0, "работает исправно")
+    for (malfunction in malfunctions)
+        if (malfunction.number == 0) {
+            currMalfunction = malfunction
+            break
+        }
+
+    attributePictures.add(AttributePictureClass(currMalfunction))
+    attributePictures[attributePictures.size - 1].isEditable = false
+
+    for (attribute in attributes)
+        attributePictures[attributePictures.size - 1].valuesByAttributes.add(ValuesByAttributeClass(attribute))
+
+    for (valuesByAttribute in attributePictures[attributePictures.size - 1].valuesByAttributes) {
+        valuesByAttribute.values = valuesByAttribute.attribute.normalValues
+    }
+}
+
 fun clearDataBase() {
-    valuesByMalfunctions.clear()
     attributePictures.clear()
     malfunctions.clear()
     for (attribute in attributes) {
@@ -206,6 +243,8 @@ fun initDataBase(inpPath: String): Boolean {
             println("Ошибка прочтения перечня областей возможных значений")
             return false
         }
+
+        initCorrectWorkAttributePicture()
 
         if (!initAttributePicture(path)) {
             println("Ошибка прочтения перечня значимых признаков для неисправностей")

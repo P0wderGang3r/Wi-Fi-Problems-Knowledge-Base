@@ -1,13 +1,13 @@
 package gui
 
 import gui.controllers.ControllerMain
+import gui.views.ViewDescription
+import gui.views.ViewHelp
+import gui.views.view_DB.ViewDBEditor
+import gui.views.view_diagnostics.ViewDiagnostics
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TabPane
 import tornadofx.*
-import gui.views.view_DB.ViewDBEditor
-import gui.views.ViewDescription
-import gui.views.view_diagnostics.ViewDiagnostics
-import gui.views.ViewHelp
 
 class MainView: View() {
     private val controllerMain: ControllerMain by inject()

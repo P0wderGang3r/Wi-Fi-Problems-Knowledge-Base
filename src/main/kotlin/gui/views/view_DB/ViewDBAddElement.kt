@@ -1,10 +1,10 @@
 package gui.views.view_DB
 
+import gui.controllers.controller_DB.ControllerDBCrutch
+import gui.controllers.controller_DB.ControllerDBEditor
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableView
 import tornadofx.*
-import gui.controllers.controller_DB.ControllerDBCrutch
-import gui.controllers.controller_DB.ControllerDBEditor
 
 class ViewDBAddElement(sideController: ControllerDBEditor, parentTableView: TableView<ControllerDBCrutch>): View() {
     private val arguments = listOf(SimpleStringProperty(), SimpleStringProperty(), SimpleStringProperty())

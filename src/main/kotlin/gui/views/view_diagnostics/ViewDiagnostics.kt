@@ -1,11 +1,11 @@
 package gui.views.view_diagnostics
 
 import diagnostics_functions.refreshDiagnostics
-import javafx.collections.FXCollections
-import tornadofx.*
 import gui.controllers.controller_diagnostics.ControllerDiagnostics
 import gui.controllers.controller_diagnostics.ControllerDiagnosticsCrutch
+import javafx.collections.FXCollections
 import javafx.scene.paint.Color
+import tornadofx.*
 
 class ViewDiagnostics: View() {
     private val sideController: ControllerDiagnostics by inject()
@@ -16,8 +16,6 @@ class ViewDiagnostics: View() {
 
         val attributeValues = FXCollections.observableArrayList<String>()
         attributeValues.asyncItems { sideController.getValues() }
-
-        fitToParentSize()
 
         center = tableview(tableData) {
             isEditable = true
@@ -31,10 +29,11 @@ class ViewDiagnostics: View() {
             ).useComboBox(attributeValues).weightedWidth(0.8)
 
             onEditCommit {
+                val previousValue = items[selectedCell!!.row].secondValue
                 sideController.setValue(selectedCell!!.row, items[selectedCell!!.row].secondValue)
 
                 style {
-                    if (sideController.isCorrectAttributeValue(
+                    if (sideController.isCorrectAttributeValues(
                             items[selectedCell!!.row].firstValue,
                             items[selectedCell!!.row].secondValue
                         )
@@ -57,6 +56,9 @@ class ViewDiagnostics: View() {
                         refreshDiagnostics()
                         tableData.asyncItems { sideController.getList() }
                         attributeValues.asyncItems { sideController.getValues() }
+                        this@borderpane.center.style {
+                            backgroundColor += Color.LIGHTGRAY
+                        }
                     }
                 }
             }

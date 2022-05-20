@@ -1,14 +1,16 @@
 package database_functions
 
+import attributePictures
+import attributes
 import data_classes.AttributeClass
 import data_classes.AttributePictureClass
 import data_classes.MalfunctionClass
-import data_classes.ValuesByMalfunctionClass
-import attributePictures
-import attributes
+import data_classes.ValuesByAttributeClass
 import malfunctions
-import valuesByMalfunctions
 
+/**
+ * Проверка, есть ли данное значение среди множества значений
+ */
 fun findValue(value: String, values: ArrayList<String>): Boolean {
     for (valueInList in values) {
         if (value.equals(valueInList)) {
@@ -19,6 +21,9 @@ fun findValue(value: String, values: ArrayList<String>): Boolean {
     return false
 }
 
+/**
+ * Поиск неисправности среди множества неисправностей
+ */
 fun findMalfunction(name: String): MalfunctionClass? {
     for (malfunction in malfunctions) {
         if (malfunction.name.equals(name)) {
@@ -29,6 +34,9 @@ fun findMalfunction(name: String): MalfunctionClass? {
     return null
 }
 
+/**
+ * Поиск признаков среди множества признаков
+ */
 fun findAttribute(name: String): AttributeClass? {
     for (attribute in attributes) {
         if (attribute.name.equals(name)) {
@@ -39,6 +47,9 @@ fun findAttribute(name: String): AttributeClass? {
     return null
 }
 
+/**
+ * Поиск признаков при неисправности из множества признаков при неисправности
+ */
 fun findAttributePicture(name: String): AttributePictureClass? {
     for (attributePicture in attributePictures) {
         if (attributePicture.malfunction.name.equals(name)) {
@@ -49,32 +60,14 @@ fun findAttributePicture(name: String): AttributePictureClass? {
     return null
 }
 
-fun findAttributeInPicture(picture: AttributePictureClass, name: String): AttributeClass? {
-    for (attribute in picture.attributes) {
-        if (attribute.name.equals(name)) {
+/**
+ * Поиск признака при неисправности из множества признаков при неисправности
+ */
+fun findAttributeInPicture(picture: AttributePictureClass, name: String): ValuesByAttributeClass? {
+    for (attribute in picture.valuesByAttributes) {
+        if (attribute.attribute.name.equals(name)) {
             return attribute
         }
-    }
-
-    return null
-}
-
-fun findValuesByMalfunction(malfunctionName: String, attributeName: String): ValuesByMalfunctionClass? {
-    for (valueByMalfunction in valuesByMalfunctions) {
-        if (valueByMalfunction.malfunction.name.equals(malfunctionName)) {
-            if (valueByMalfunction.attribute.name.equals(attributeName)) {
-                return valueByMalfunction
-            }
-        }
-    }
-
-    return null
-}
-
-fun findValueInValuesByMalfunction(values: ArrayList<String>, valueToSearch: String): String? {
-    for (value in values) {
-        if (value.equals(valueToSearch))
-            return value
     }
 
     return null

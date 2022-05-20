@@ -1,8 +1,11 @@
 package database_functions
 
-import valuesByMalfunctions
+import attributePictures
+import data_classes.ValuesByAttributeClass
 
-
+/**
+ * Изменение названия неисправности
+ */
 fun editMalfunction(malfunctionName: String, newName: String): Boolean {
     if (malfunctionName == "")
         return false
@@ -17,8 +20,14 @@ fun editMalfunction(malfunctionName: String, newName: String): Boolean {
 
 }
 
+/**
+ * Изменение названия признака
+ */
 fun editAttribute(attributeName: String, newName: String): Boolean {
     if (attributeName == "")
+        return false
+
+    if (newName == "")
         return false
 
     val attribute = findAttribute(attributeName) ?: return false
@@ -28,6 +37,9 @@ fun editAttribute(attributeName: String, newName: String): Boolean {
 
 }
 
+/**
+ * Изменение названия признака и значения признака
+ */
 fun editAvailableValue(attributeName: String, value: String, newAttributeName: String, newValueName: String): Boolean {
     if (attributeName == "" || value == "")
         return false
@@ -36,6 +48,9 @@ fun editAvailableValue(attributeName: String, value: String, newAttributeName: S
         return false
 
     val attribute = findAttribute(attributeName) ?: return false
+
+    //Изменяем название признака
+    attribute.name = newAttributeName
 
     var isInNormalValues = false
 
@@ -59,15 +74,16 @@ fun editAvailableValue(attributeName: String, value: String, newAttributeName: S
     //Добавляем в возможные значения
     attribute.availableValues.add(newValueName)
 
-    //Добавляем в нормальные значения, если в них было
+    //Добавляем в нормальные значения, если данное значение было среди таковых
     if (isInNormalValues)
         attribute.normalValues.add(newValueName)
-
-    attribute.name = newAttributeName
 
     return true
 }
 
+/**
+ * Изменение названия признака и зависимости нормального значения от возможного
+ */
 fun editNormalValue(attributeName: String, value: String, newAttributeName: String, newValueName: String): Boolean {
     if (attributeName == "" || value == "")
         return false
@@ -77,6 +93,7 @@ fun editNormalValue(attributeName: String, value: String, newAttributeName: Stri
 
     val attribute = findAttribute(attributeName) ?: return false
 
+    //Изменяем название признака
     attribute.name = newAttributeName
 
     //Проверяем, принадлежит ли новое значение множеству возможных значений признака
@@ -84,10 +101,11 @@ fun editNormalValue(attributeName: String, value: String, newAttributeName: Stri
         return false
 
     //Проверяем, что новое значение не сломает логику существующих значений при неисправности
-    for (valuesByMalfunction in valuesByMalfunctions) {
-        for (lValue in valuesByMalfunction.values)
-            if (lValue.equals(newValueName))
-                return false
+    for (picture in attributePictures) {
+        for (valuesByMalfunction in picture.valuesByAttributes)
+            for (lValue in valuesByMalfunction.values)
+                if (lValue.equals(newValueName))
+                    return false
     }
 
     //Удаляем из нормальных значений
@@ -104,8 +122,9 @@ fun editNormalValue(attributeName: String, value: String, newAttributeName: Stri
     return true
 }
 
-//TODO: Проверка, что новое нормальное значение не существует в множестве значений при неисправности
-
+/**
+ * Изменение названия неисправности и зависимости признака от неисправности
+ */
 fun editAttributePicture(malfunctionName: String, attributeName: String,
                          newMalfunctionName: String, newAttributeName: String): Boolean {
     if (malfunctionName == "" || attributeName == "")
@@ -115,18 +134,25 @@ fun editAttributePicture(malfunctionName: String, attributeName: String,
         return false
 
     val picture = findAttributePicture(malfunctionName) ?: return false
-    val attribute = findAttribute(attributeName) ?: return false
 
+    //Если признаковая картина не редактируема, то отказ
+    if (!picture.isEditable)
+        return false
+
+    //Изменение названия неисправности
     picture.malfunction.name = newMalfunctionName
 
     val newAttribute = findAttribute(newAttributeName) ?: return false
 
-    picture.attributes.remove(attribute)
-    picture.attributes.add(newAttribute)
+    picture.valuesByAttributes.remove(findAttributeInPicture(picture, attributeName))
+    picture.valuesByAttributes.add(ValuesByAttributeClass(newAttribute))
 
     return true
 }
 
+/**
+ * Изменение названий неисправности и признака, зависимости значения признака от признака
+ */
 fun editValuesByMalfunction(malfunctionName: String, attributeName: String, value: String,
                             newMalfunctionName: String, newAttributeName: String, newValueName: String): Boolean {
 
@@ -136,9 +162,15 @@ fun editValuesByMalfunction(malfunctionName: String, attributeName: String, valu
     if (newMalfunctionName == "" || newAttributeName == "" || newValueName == "")
         return false
 
-    val valuesByMalfunction = findValuesByMalfunction(malfunctionName, attributeName) ?: return false
+    val picture = findAttributePicture(malfunctionName) ?: return false
 
-    valuesByMalfunction.malfunction.name = newMalfunctionName
+    if (!picture.isEditable)
+        return false
+
+    val valuesByMalfunction = findAttributeInPicture(picture, attributeName) ?: return false
+
+    //Переименовываем название неисправности и признака
+    picture.malfunction.name = newMalfunctionName
     valuesByMalfunction.attribute.name = newAttributeName
 
     //Проверяем, что новое значение присутствует в множестве допустимых значений

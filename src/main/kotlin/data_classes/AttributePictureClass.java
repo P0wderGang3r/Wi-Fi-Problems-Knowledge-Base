@@ -13,12 +13,22 @@ public class AttributePictureClass {
         this.malfunction = malfunction;
     }
 
+    private boolean isEditable = true;
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
-    private final ArrayList<AttributeClass> attributes = new ArrayList<>();
+    private final ArrayList<ValuesByAttributeClass> valuesByAttributes = new ArrayList<>();
 
-    public ArrayList<AttributeClass> getAttributes() {
-        return attributes;
+    public ArrayList<ValuesByAttributeClass> getValuesByAttributes() {
+        return valuesByAttributes;
     }
 
 }

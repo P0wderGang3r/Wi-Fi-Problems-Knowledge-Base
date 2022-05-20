@@ -1,10 +1,9 @@
 package gui.controllers.controller_DB
 
+import gui.controllers.controller_DB.ControllerDBInteractions.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.Controller
-
-import gui.controllers.controller_DB.ControllerDBInteractions.*
 
 class ControllerDBEditor: Controller() {
     var currentDBController: ControllerDBInteractions = NULL

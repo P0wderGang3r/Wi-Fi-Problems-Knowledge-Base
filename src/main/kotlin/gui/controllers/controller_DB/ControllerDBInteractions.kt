@@ -1,12 +1,7 @@
 package gui.controllers.controller_DB
 
-import malfunctions
-import attributes
-import attributePictures
 import database_functions.*
-import valuesByMalfunctions
 import java.util.*
-import kotlin.collections.ArrayList
 
 enum class ControllerDBInteractions {
     NULL {
@@ -46,13 +41,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 0.0, 0.0)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (malfunction in malfunctions) {
-                result.add(ControllerDBCrutch(malfunction.name, "", ""))
-            }
-
-            return result
+            return getMalfunctions()
         }
 
         override fun getNamesOfFields(): List<String> {
@@ -87,13 +76,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 0.0, 0.0)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (attribute in attributes) {
-                result.add(ControllerDBCrutch(attribute.name, "", ""))
-            }
-
-            return result
+            return getAttributes()
         }
 
         override fun getNamesOfFields(): List<String> {
@@ -128,14 +111,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 0.5, 0.0)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (attribute in attributes) {
-                for (value in attribute.availableValues)
-                    result.add(ControllerDBCrutch(attribute.name, value, ""))
-            }
-
-            return result
+            return getAvailableValues()
         }
 
         override fun getNamesOfFields(): List<String> {
@@ -173,14 +149,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 0.5, 0.0)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (attribute in attributes) {
-                for (value in attribute.normalValues)
-                    result.add(ControllerDBCrutch(attribute.name, value, ""))
-            }
-
-            return result
+            return getNormalValues()
         }
 
         override fun getNamesOfFields(): List<String> {
@@ -224,14 +193,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 1.0, 0.0)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (picture in attributePictures) {
-                for (attribute in picture.attributes)
-                    result.add(ControllerDBCrutch(picture.malfunction.name, attribute.name, ""))
-            }
-
-            return result
+            return getAttributePicture()
         }
 
         override fun getNamesOfFields(): List<String> {
@@ -277,20 +239,7 @@ enum class ControllerDBInteractions {
         private val weightsOfFields = listOf(1.0, 1.0, 0.5)
 
         override fun getList(): List<ControllerDBCrutch> {
-            val result: ArrayList<ControllerDBCrutch> = ArrayList()
-
-            for (valuesByMalfunction in valuesByMalfunctions) {
-                for (value in valuesByMalfunction.values)
-                    result.add(
-                        ControllerDBCrutch(
-                            valuesByMalfunction.malfunction.name,
-                            valuesByMalfunction.attribute.name,
-                            value
-                        )
-                    )
-            }
-
-            return result
+            return getValuesByMalfunctions()
         }
 
         override fun getNamesOfFields(): List<String> {

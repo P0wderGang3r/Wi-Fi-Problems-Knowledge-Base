@@ -1,7 +1,6 @@
 package gui.controllers
 
 import database_functions.initDataBase
-import diagnostics_functions.refreshDiagnostics
 import tornadofx.Controller
 
 class ControllerMain: Controller() {

@@ -10,12 +10,12 @@ class ControllerDiagnostics: Controller() {
         diagnosticsResult = getDiagnosticsResults()
     }
 
-    fun isCorrectAttributeValue(attributeName: String, valueName: String): Boolean {
-        return calculateIsCorrectAttributeValue(attributeName, valueName)
+    fun isCorrectAttributeValues(attributeName: String, valueName: String): Boolean {
+        return checkAttributeValues().size == 0
     }
 
     fun getResults(): List<String> {
-        return listOf("Test")
+        return diagnosticsResult
     }
 
     fun setValue(row: Int, value: String) {

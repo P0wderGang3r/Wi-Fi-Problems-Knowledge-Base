@@ -2,7 +2,10 @@ package gui.views.view_diagnostics
 
 import gui.controllers.controller_diagnostics.ControllerDiagnostics
 import javafx.collections.FXCollections
-import tornadofx.*
+import tornadofx.View
+import tornadofx.asyncItems
+import tornadofx.borderpane
+import tornadofx.listview
 
 class ViewResultsOfDiagnostics(sideController: ControllerDiagnostics): View() {
 
@@ -12,7 +15,7 @@ class ViewResultsOfDiagnostics(sideController: ControllerDiagnostics): View() {
         data.asyncItems { sideController.getResults() }
 
         center = listview(data) {
-
+            minWidth = 500.0
         }
     }
 

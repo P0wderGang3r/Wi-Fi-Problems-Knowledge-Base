@@ -1,9 +1,9 @@
 package gui.views
 
+import gui.controllers.ControllerHelp
 import tornadofx.View
 import tornadofx.borderpane
 import tornadofx.label
-import gui.controllers.ControllerHelp
 
 class ViewHelp: View() {
     private val sideController: ControllerHelp by inject()
