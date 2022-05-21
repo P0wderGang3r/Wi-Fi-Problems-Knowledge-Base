@@ -62,7 +62,7 @@ fun editAvailableValue(attributeName: String, value: String, newAttributeName: S
         }
     }
 
-    //Удаляем из нормальных значений
+    //Целостность данных - удаляем из нормальных значений
     for (currentValue in attribute.normalValues) {
         if (currentValue.equals(value)) {
             attribute.normalValues.remove(currentValue)
@@ -74,7 +74,7 @@ fun editAvailableValue(attributeName: String, value: String, newAttributeName: S
     //Добавляем в возможные значения
     attribute.availableValues.add(newValueName)
 
-    //Добавляем в нормальные значения, если данное значение было среди таковых
+    //Целостность данных - добавляем в нормальные значения, если данное значение было среди таковых
     if (isInNormalValues)
         attribute.normalValues.add(newValueName)
 

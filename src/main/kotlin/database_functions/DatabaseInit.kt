@@ -185,7 +185,7 @@ fun initValuesByMalfunction(path: String): Boolean {
 /**
  * Привязка/создание картины признаков при исправной работе с нормальными значениями признаков
  */
-fun initCorrectWorkAttributePicture() {
+fun initAttributePictureForNormalValues() {
     var currMalfunction = MalfunctionClass(0, "работает исправно")
     for (malfunction in malfunctions)
         if (malfunction.number == 0) {
@@ -244,7 +244,7 @@ fun initDataBase(inpPath: String): Boolean {
             return false
         }
 
-        initCorrectWorkAttributePicture()
+        initAttributePictureForNormalValues()
 
         if (!initAttributePicture(path)) {
             println("Ошибка прочтения перечня значимых признаков для неисправностей")

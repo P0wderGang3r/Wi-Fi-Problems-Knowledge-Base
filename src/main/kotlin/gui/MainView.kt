@@ -32,7 +32,7 @@ class MainView: View() {
             center = textfield(pathToDB) {
                 isFocusTraversable = true
                 isEditable = false
-                tooltip("Путь до базы знаний")
+                tooltip("Текущий путь до базы знаний")
             }
 
             right = hbox {

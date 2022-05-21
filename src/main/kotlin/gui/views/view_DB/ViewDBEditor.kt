@@ -85,8 +85,6 @@ class ViewDBEditor: View() {
                                 sideController.removeFromList(listOf(attribute1, attribute2, attribute3))
 
                                 this@tableview.asyncItems { sideController.getList() }
-
-                                //TODO: Создание окна с уведомлением об ошибке при удалении элемента с существующими зависимостями
                             }
                         }
                     }

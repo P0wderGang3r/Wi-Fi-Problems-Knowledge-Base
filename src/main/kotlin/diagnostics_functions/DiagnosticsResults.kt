@@ -63,9 +63,9 @@ fun getDiagnosticsResults(): List<String> {
 
     for (picture in attributePictures) {
         var numOfCorrectAttributes = 0.0
-        diagnosticsVerdict.add("Неисправность:")
-        diagnosticsVerdict.add(picture.malfunction.name)
-        diagnosticsVerdict.add("Совпадающие признаки:")
+        diagnosticsVerdict.add("| Неисправность:")
+        diagnosticsVerdict.add("|->| ${picture.malfunction.name}")
+        diagnosticsVerdict.add("| Перечень совпадающих значений признаков:")
 
         //Проходим по всем признакам при неисправности
         for (valuesByAttribute in picture.valuesByAttributes) {
@@ -79,7 +79,7 @@ fun getDiagnosticsResults(): List<String> {
                     for (valueByMalfunction in valuesByAttribute.values) {
                         //Если совпадает с одним из значений при неисправности, то добавляем как корректный
                         if (valueByMalfunction.equals(diagnosticsEntry.value)) {
-                            diagnosticsVerdict.add(diagnosticsEntry.attribute.name)
+                            diagnosticsVerdict.add("|->| ${diagnosticsEntry.attribute.name}")
                             numOfCorrectAttributes += 1
                             break
                         }
@@ -97,15 +97,11 @@ fun getDiagnosticsResults(): List<String> {
         )
 
         if (numOfCorrectAttributes < 1) {
-            diagnosticsVerdict.add("совпадающих признаков не обнаружено")
+            diagnosticsVerdict.add("|->| совпадающих признаков не обнаружено")
         }
 
-        diagnosticsVerdict.add("")
-        diagnosticsVerdict.add(
-            "Коэффициент совпадения: " +
-                    "${numOfCorrectAttributes / picture.valuesByAttributes.size}"
-        )
-
+        diagnosticsVerdict.add("| Процент совпадения с классом:")
+        diagnosticsVerdict.add("|->| ${((numOfCorrectAttributes / picture.valuesByAttributes.size) * 100).toInt()}%")
         diagnosticsVerdict.add("")
     }
 
@@ -125,19 +121,20 @@ fun getDiagnosticsResults(): List<String> {
             diagnosticsBestList.add(diagnosticsBestCoefficient)
     }
 
-    diagnosticsVerdict.add("Наилучшие совпадения с классами неисправности")
-
+    diagnosticsVerdict.add("| Наилучшие совпадения с классами неисправности")
 
     //Если лучший коэффициент является хоть сколь-нибудь значимым, то выводим на экран все неисправности
     if (bestCoefficient > 0.01) {
-        diagnosticsVerdict.add("Коэффициент совпадения: ${diagnosticsBestList[0].coefficient}")
+        diagnosticsVerdict.add("| Процент совпадения:")
+        diagnosticsVerdict.add("|->| ${(diagnosticsBestList[0].coefficient * 100).toInt()}%")
+        diagnosticsVerdict.add("| Перечень неисправностей:")
         for (diagnosticsBestListEntry in diagnosticsBestList) {
-            diagnosticsVerdict.add("Неисправность: ${diagnosticsBestListEntry.malfunctionName}")
+            diagnosticsVerdict.add("|->| ${diagnosticsBestListEntry.malfunctionName}")
         }
     } else {
-        diagnosticsVerdict.add("Предоставлено недостаточное количество данных,")
-        diagnosticsVerdict.add("либо введённые данные не соответствуют ни единой неисправности")
-        diagnosticsVerdict.add("для предоставления вердикта на основании результатов диагностики")
+        diagnosticsVerdict.add("|->| Предоставлено недостаточное количество данных,")
+        diagnosticsVerdict.add("|->| либо введённые данные не соответствуют ни единой неисправности")
+        diagnosticsVerdict.add("|->| для предоставления вердикта на основании результатов диагностики.")
     }
 
     return diagnosticsVerdict

@@ -236,7 +236,7 @@ enum class ControllerDBInteractions {
     VALUES_BY_MALFUNCTION {
 
         private val namesOfFields = listOf("Неисправности", "Признаки", "Значения")
-        private val weightsOfFields = listOf(1.0, 1.0, 0.5)
+        private val weightsOfFields = listOf(1.0, 1.0, 0.6)
 
         override fun getList(): List<ControllerDBCrutch> {
             return getValuesByMalfunctions()

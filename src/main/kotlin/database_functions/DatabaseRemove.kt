@@ -8,42 +8,54 @@ import malfunctions
  * Удаление неисправности
  */
 fun removeMalfunction(malfunctionName: String): Boolean {
-    val malfunction = findMalfunction(malfunctionName)
+    val malfunction = findMalfunction(malfunctionName) ?: return false
 
-    if (malfunction != null) {
-        malfunctions.remove(malfunction)
-        return true
+    //Целостность данных - если используется в картине признаков при неисправности, то отказ
+    val picture = findAttributePicture(malfunctionName)
+    if (picture != null) {
+        return false
     }
 
-    return false
+    malfunctions.remove(malfunction)
+    return true
 }
 
 /**
  * Удаление признака
  */
 fun removeAttribute(attributeName: String): Boolean {
-    val attribute = findAttribute(attributeName)
+    val attribute = findAttribute(attributeName) ?: return false
 
-    if (attribute != null) {
-        attributes.remove(attribute)
-        return true
+    //Целостность данных - если признак из картины признаков при неисправности, то отказ
+    for (picture in attributePictures) {
+        val attributeInPicture = findAttributeInPicture(picture, attributeName)
+        if (attributeInPicture != null) {
+            return false
+        }
     }
 
-    return false
+    attributes.remove(attribute)
+    return true
 }
 
 /**
  * Удаление возможного значения
  */
 fun removeAvailableValue(attributeName: String, value: String): Boolean {
-    val currentAttribute = findAttribute(attributeName)
+    val currentAttribute = findAttribute(attributeName) ?: return false
 
-    if (currentAttribute != null) {
-        if (findValue(value, currentAttribute.availableValues)) {
+    if (findValue(value, currentAttribute.availableValues)) {
 
-            currentAttribute.availableValues.remove(value)
-            return true
-        }
+        //Целостность данных - если количество возможных значений больше количества нормальных и...
+        if (currentAttribute.availableValues.size > currentAttribute.normalValues.size)
+            //удаляемое значение из множества нормальных значений, то отказ
+            if (findValue(value, currentAttribute.normalValues)) {
+                return false
+            }
+
+        currentAttribute.availableValues.remove(value)
+
+        return true
     }
 
     return false
@@ -53,14 +65,16 @@ fun removeAvailableValue(attributeName: String, value: String): Boolean {
  * Удаление нормального значения
  */
 fun removeNormalValue(attributeName: String, value: String): Boolean {
-    val currentAttribute = findAttribute(attributeName)
+    val currentAttribute = findAttribute(attributeName) ?: return false
 
-    if (currentAttribute != null) {
-        if (findValue(value, currentAttribute.normalValues)) {
+    if (findValue(value, currentAttribute.normalValues)) {
 
-            currentAttribute.normalValues.remove(value)
-            return true
-        }
+        //Целостность данных - если нормальных значений задано не больше одного, то не удаляем
+        if (currentAttribute.normalValues.size <= 1)
+            return false
+
+        currentAttribute.normalValues.remove(value)
+        return true
     }
 
     return false
@@ -75,9 +89,11 @@ fun removeAttributeFromPicture(malfunctionName: String, attributeName: String): 
 
     picture.valuesByAttributes.remove(attributeInPicture)
 
+    //Если картина из множества не редактируемых, то не удаляем
     if (!picture.isEditable)
         return false
 
+    //Если в картине не осталось признаков, то удаляем картину
     if (picture.valuesByAttributes.size == 0) {
         attributePictures.remove(picture)
     }
@@ -92,11 +108,13 @@ fun removeValueFromValuesByMalfunction(malfunctionName: String, attributeName: S
 
     val picture = findAttributePicture(malfunctionName) ?: return false
 
+    //Если картина из множества не редактируемых, то не удаляем
     if (!picture.isEditable)
         return false
 
     val attributeInPicture = findAttributeInPicture(picture, attributeName) ?: return false
 
+    //Если находим значение в множестве значений признака при неисправности, то удаляем
     for (lValue in attributeInPicture.values) {
         if (lValue == value) {
             attributeInPicture.values.remove(value)
