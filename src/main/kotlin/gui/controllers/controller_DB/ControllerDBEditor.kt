@@ -1,5 +1,6 @@
 package gui.controllers.controller_DB
 
+import database_functions.getElementsByIndex
 import errors.ErrorClass
 import gui.ErrorView
 import gui.controllers.controller_DB.ControllerDBInteraction.*
@@ -65,5 +66,9 @@ class ControllerDBEditor: Controller() {
         lastError = currentDBController.removeFromList(arguments)
         if (lastError != ErrorClass.NULL)
             ErrorView().openModal()
+    }
+
+    fun getColumn(index: Int): List<String> {
+        return currentDBController.getAllColumnValues(index)
     }
 }

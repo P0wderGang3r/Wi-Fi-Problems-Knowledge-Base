@@ -33,6 +33,10 @@ enum class ControllerDBInteraction {
         override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
             return ErrorClass.NULL
         }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return emptyList()
+        }
     },
 
 
@@ -68,6 +72,10 @@ enum class ControllerDBInteraction {
         override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
             return editMalfunction(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
         }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return getElementsByIndex(0)
+        }
     },
 
 
@@ -102,6 +110,10 @@ enum class ControllerDBInteraction {
 
         override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
             return editAttribute(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
+        }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return getElementsByIndex(1)
         }
     },
 
@@ -140,6 +152,13 @@ enum class ControllerDBInteraction {
                 defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
             )
+        }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return when(index) {
+                0 -> getElementsByIndex(1)
+                else -> getElementsByIndex(2)
+            }
         }
     },
 
@@ -184,6 +203,13 @@ enum class ControllerDBInteraction {
                 defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
             )
+        }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return when(index) {
+                0 -> getElementsByIndex(1)
+                else -> getElementsByIndex(2)
+            }
         }
     },
 
@@ -231,6 +257,13 @@ enum class ControllerDBInteraction {
                 values[1].lowercase(Locale.getDefault())
             )
         }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return when(index) {
+                0 -> getElementsByIndex(0)
+                else -> getElementsByIndex(1)
+            }
+        }
     },
 
 
@@ -277,6 +310,10 @@ enum class ControllerDBInteraction {
                 values[2].lowercase(Locale.getDefault())
             )
         }
+
+        override fun getAllColumnValues(index: Int): List<String> {
+            return getElementsByIndex(index)
+        }
     };
 
     abstract fun getList(): List<ControllerDBCrutch>
@@ -286,4 +323,6 @@ enum class ControllerDBInteraction {
     abstract fun addInList(values: List<String>): ErrorClass
     abstract fun removeFromList(values: List<String>): ErrorClass
     abstract fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass
+
+    abstract fun getAllColumnValues(index: Int): List<String>
 }

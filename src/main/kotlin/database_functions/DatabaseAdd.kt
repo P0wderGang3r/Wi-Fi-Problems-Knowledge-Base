@@ -120,8 +120,46 @@ fun addAttributePicture(malfunctionName: String, attributeName: String): ErrorCl
 }
 
 /**
- * Заглушка
+ * Добавление нового признака в признаки при неисправности со значением из множества возможных значений
  */
 fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value: String): ErrorClass {
-    return ErrorClass.NULL
+    if (malfunctionName == "" ||attributeName == "" || value != "")
+        return ErrorClass.ADD_DEFAULT
+
+    val malfunction = findMalfunction(malfunctionName) ?: return ErrorClass.ADD_DEFAULT
+    val attribute = findAttribute(attributeName) ?: return ErrorClass.ADD_DEFAULT
+
+    //Предварительно проверяем новое значение на то,
+    // что оно есть среди множества возможных значений...
+    if (!findValue(value, attribute.availableValues))
+        return ErrorClass.ADD_DEFAULT
+
+    // ... и отсутствует в множестве нормальных значений
+    if (findValue(value, attribute.normalValues))
+        return ErrorClass.ADD_DEFAULT
+
+    var picture = findAttributePicture(malfunctionName)
+
+    //Если набор признаков при неисправности не существует, то добавляем
+    if (picture == null) {
+        picture = AttributePictureClass(malfunction)
+        attributePictures.add(picture)
+    }
+
+    //Если признаковая картина не редактируема, то отказ
+    if (!picture.isEditable)
+        return ErrorClass.ADD_DEFAULT
+
+    val attributeInPicture = findAttributeInPicture(picture, attributeName)
+
+    //Если признак в признаках при неисправности не существует, то добавляем
+    if (attributeInPicture == null) {
+        val newValuesByAttributes = ValuesByAttributeClass(attribute)
+        newValuesByAttributes.values.add(value)
+
+        picture.valuesByAttributes.add(newValuesByAttributes)
+        return ErrorClass.NULL
+    }
+
+    return ErrorClass.ADD_DEFAULT
 }

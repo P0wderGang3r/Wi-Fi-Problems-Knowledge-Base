@@ -23,6 +23,31 @@ fun calculateIsCorrectAttributeValue(attributeName: String, valueName: String): 
 }
 
 /**
+ * Проверка, что каждый из признаков из признаков при неисправности имеет хотя-бы одно значение
+ *  из множества значений признака
+ */
+fun checkAttributePictureValues(): ArrayList<String> {
+    val diagnosticsVerdict: ArrayList<String> = ArrayList()
+
+    for (picture in attributePictures) {
+        for (attribute in picture.valuesByAttributes) {
+            if (attribute.values.size == 0) {
+                if (diagnosticsVerdict.size == 0) {
+                    diagnosticsVerdict.add("Ошибка вывода результата")
+                    diagnosticsVerdict.add("")
+                    diagnosticsVerdict.add("Нарушена целостность базы знаний")
+                    diagnosticsVerdict.add("Следующим признакам не были заданы значения")
+                    diagnosticsVerdict.add("в множестве значений при неисправности:")
+                }
+                diagnosticsVerdict.add("${attribute.attribute.name} при ${picture.malfunction.name}")
+            }
+        }
+    }
+
+    return diagnosticsVerdict
+}
+
+/**
  * Проверка, является ли каждое из значений принадлежащим множеству значений сопоставленного признака
  */
 fun checkAttributeValues(): ArrayList<String> {
@@ -33,7 +58,7 @@ fun checkAttributeValues(): ArrayList<String> {
             if (diagnosticsVerdict.size == 0) {
                 diagnosticsVerdict.add("Ошибка вывода результата")
                 diagnosticsVerdict.add("")
-                diagnosticsVerdict.add("Следующим параметрам были заданы некорректные значения:")
+                diagnosticsVerdict.add("Следующим признакам были заданы некорректные значения:")
             }
 
             diagnosticsVerdict.add(diagnosticsEntry.attribute.name)

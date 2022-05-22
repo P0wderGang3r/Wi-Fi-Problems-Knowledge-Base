@@ -2,6 +2,7 @@ package gui.views.view_DB
 
 import gui.controllers.controller_DB.ControllerDBCrutch
 import gui.controllers.controller_DB.ControllerDBEditor
+import gui.controllers.controller_DB.ControllerDBInteraction
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableView
 import tornadofx.*
@@ -16,30 +17,55 @@ class ViewDBAddElement(sideController: ControllerDBEditor, parentTableView: Tabl
         paddingBottom = 15.0
 
         if (sideController.numberOfFields == 1) {
-            label("Сорт \"${sideController.namesOfFields[0]}\":")
+            label("Значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
         }
 
         if (sideController.numberOfFields == 2) {
-            label("Новое значение для сорта \"${sideController.namesOfFields[0]}\":")
-            textfield(arguments[0])
+            label("Значение сорта \"${sideController.namesOfFields[0]}\":")
+            combobox(arguments[0]) {
+                useMaxWidth = true
+                items = sideController.getColumn(0).asObservable()
+            }
             label()
-            label("Новое значение для сорта \"${sideController.namesOfFields[1]}\":")
-            textfield(arguments[1])
+
+            if (sideController.currentDBController != ControllerDBInteraction.ATTRIBUTE_AVAILABLE_VALUES) {
+                label("Значение сорта \"${sideController.namesOfFields[1]}\":")
+
+                combobox(arguments[1]) {
+                    useMaxWidth = true
+                    items = sideController.getColumn(1).asObservable()
+                }
+            }
+            else {
+                label("Новое значение для сорта \"${sideController.namesOfFields[1]}\":")
+                textfield(arguments[1])
+            }
             label()
 
         }
 
         if (sideController.numberOfFields == 3) {
-            label("Новое значение для сорта \"${sideController.namesOfFields[0]}\":")
-            textfield(arguments[0])
+            label("Значение сорта \"${sideController.namesOfFields[0]}\":")
+            combobox(arguments[0]) {
+                useMaxWidth = true
+                items = sideController.getColumn(0).asObservable()
+            }
             label()
-            label("Новое значение для сорта \"${sideController.namesOfFields[1]}\":")
-            textfield(arguments[1])
+
+            label("Значение сорта \"${sideController.namesOfFields[1]}\":")
+            combobox(arguments[1]) {
+                useMaxWidth = true
+                items = sideController.getColumn(1).asObservable()
+            }
             label()
-            label("Новое значение для сорта \"${sideController.namesOfFields[2]}\":")
-            textfield(arguments[2])
+
+            label("Значение сорта \"${sideController.namesOfFields[2]}\":")
+            combobox(arguments[2]) {
+                useMaxWidth = true
+                items = sideController.getColumn(2).asObservable()
+            }
             label()
         }
 

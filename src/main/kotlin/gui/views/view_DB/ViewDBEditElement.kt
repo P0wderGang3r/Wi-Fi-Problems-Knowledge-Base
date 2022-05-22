@@ -21,7 +21,9 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
 
         if (sideController.numberOfFields == 1) {
             label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
-            textfield(arguments[0])
+            combobox(arguments[0]) {
+                items = sideController.getColumn(0).asObservable()
+            }
             label()
         }
 
@@ -29,11 +31,18 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
             label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
-            if (sideController.currentDBController != ControllerDBInteraction.ATTRIBUTE_AVAILABLE_VALUES)
+            if (sideController.currentDBController != ControllerDBInteraction.ATTRIBUTE_AVAILABLE_VALUES) {
                 label("Изменить зависимость сорта \"${sideController.namesOfFields[1]}\":")
-            else
+
+                combobox(arguments[1]) {
+                    useMaxWidth = true
+                    items = sideController.getColumn(1).asObservable()
+                }
+            }
+            else {
                 label("Изменить значение сорта \"${sideController.namesOfFields[1]}\":")
-            textfield(arguments[1])
+                textfield(arguments[1])
+            }
             label()
 
         }
@@ -46,7 +55,10 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
             textfield(arguments[1])
             label()
             label("Изменить зависимость сорта \"${sideController.namesOfFields[2]}\":")
-            textfield(arguments[2])
+            combobox(arguments[2]) {
+                useMaxWidth = true
+                items = sideController.getColumn(2).asObservable()
+            }
             label()
         }
 

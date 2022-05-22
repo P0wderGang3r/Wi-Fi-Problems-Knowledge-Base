@@ -88,11 +88,11 @@ fun removeAttributeFromPicture(malfunctionName: String, attributeName: String): 
     val picture = findAttributePicture(malfunctionName) ?: return ErrorClass.REMOVE_DEFAULT
     val attributeInPicture = findAttributeInPicture(picture, attributeName) ?: return ErrorClass.REMOVE_DEFAULT
 
-    picture.valuesByAttributes.remove(attributeInPicture)
-
     //Если картина из множества не редактируемых, то не удаляем
     if (!picture.isEditable)
         return ErrorClass.REMOVE_DEFAULT
+
+    picture.valuesByAttributes.remove(attributeInPicture)
 
     //Если в картине не осталось признаков, то удаляем картину
     if (picture.valuesByAttributes.size == 0) {
