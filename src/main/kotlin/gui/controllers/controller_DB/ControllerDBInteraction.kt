@@ -3,7 +3,7 @@ package gui.controllers.controller_DB
 import database_functions.*
 import java.util.*
 
-enum class ControllerDBInteractions {
+enum class ControllerDBInteraction {
     NULL {
         override fun getWeightsOfFields(): List<Double> {
             return emptyList()

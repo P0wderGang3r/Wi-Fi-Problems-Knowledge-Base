@@ -1,12 +1,12 @@
 package gui.controllers.controller_DB
 
-import gui.controllers.controller_DB.ControllerDBInteractions.*
+import gui.controllers.controller_DB.ControllerDBInteraction.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.Controller
 
 class ControllerDBEditor: Controller() {
-    var currentDBController: ControllerDBInteractions = NULL
+    var currentDBController: ControllerDBInteraction = NULL
 
     var namesOfFields: List<String> = currentDBController.getNamesOfFields()
 

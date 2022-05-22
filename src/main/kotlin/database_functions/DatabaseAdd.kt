@@ -15,11 +15,13 @@ fun addMalfunction(malfunctionName: String): Boolean {
     if (malfunctionName == "")
         return false
 
-    findMalfunction(malfunctionName) ?: return false
+    //Добавляем, если нет такой неисправности
+    if (findMalfunction(malfunctionName) == null) {
+        malfunctions.add(MalfunctionClass(0, malfunctionName))
+        return true
+    }
 
-    malfunctions.add(MalfunctionClass(0, malfunctionName))
-
-    return true
+    return false
 }
 
 /**
@@ -29,10 +31,12 @@ fun addAttribute(attributeName: String): Boolean {
     if (attributeName == "")
         return false
 
-    val attribute = findAttribute(attributeName) ?: return false
+    if (findAttribute(attributeName) == null) {
+        attributes.add(AttributeClass(0, attributeName))
+        return true
+    }
 
-    attributes.add(AttributeClass(0, attributeName))
-    return true
+    return false
 }
 
 /**

@@ -2,7 +2,7 @@ package gui.views.view_DB
 
 import gui.controllers.controller_DB.ControllerDBCrutch
 import gui.controllers.controller_DB.ControllerDBEditor
-import gui.controllers.controller_DB.ControllerDBInteractions
+import gui.controllers.controller_DB.ControllerDBInteraction
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableView
 import tornadofx.*
@@ -29,7 +29,7 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
             label("Изменить значение сорта \"${sideController.namesOfFields[0]}\":")
             textfield(arguments[0])
             label()
-            if (sideController.currentDBController != ControllerDBInteractions.ATTRIBUTE_AVAILABLE_VALUES)
+            if (sideController.currentDBController != ControllerDBInteraction.ATTRIBUTE_AVAILABLE_VALUES)
                 label("Изменить зависимость сорта \"${sideController.namesOfFields[1]}\":")
             else
                 label("Изменить значение сорта \"${sideController.namesOfFields[1]}\":")
