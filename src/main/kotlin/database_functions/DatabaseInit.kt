@@ -6,6 +6,7 @@ import data_classes.AttributeClass
 import data_classes.AttributePictureClass
 import data_classes.MalfunctionClass
 import data_classes.ValuesByAttributeClass
+import errors.ErrorClass
 import malfunctions
 import java.io.FileReader
 
@@ -214,7 +215,7 @@ fun clearDataBase() {
     attributes.clear()
 }
 
-fun initDataBase(inpPath: String): Boolean {
+fun initDataBase(inpPath: String): ErrorClass {
     var path = inpPath
 
     if (path.isNotEmpty() && path[path.length - 1] != '/') {
@@ -224,41 +225,53 @@ fun initDataBase(inpPath: String): Boolean {
     clearDataBase()
 
     try {
-        if (!initMalfunctionClasses(path)) {
-            println("Ошибка прочтения перечня неисправностей")
-            return false
-        }
-
-        if (!initAttributeClasses(path)) {
-            println("Ошибка прочтения перечня признаков")
-            return false
-        }
-
-        if (!initAvailableValueClasses(path)) {
-            println("Ошибка прочтения перечня областей допустимых значений")
-            return false
-        }
-
-        if (!initNormalValueClasses(path)) {
-            println("Ошибка прочтения перечня областей возможных значений")
-            return false
-        }
-
-        initAttributePictureForNormalValues()
-
-        if (!initAttributePicture(path)) {
-            println("Ошибка прочтения перечня значимых признаков для неисправностей")
-            return false
-        }
-
-        if (!initValuesByMalfunction(path)) {
-            println("Ошибка прочтения перечня значений признаков при неисправности")
-            return false
-        }
+        initMalfunctionClasses(path)
 
     } catch (e: java.lang.Exception) {
-        return false
+        println("Ошибка прочтения перечня неисправностей")
+        return ErrorClass.INIT_DEFAULT
     }
 
-    return true
+    try {
+        initAttributeClasses(path)
+
+    } catch (e: java.lang.Exception) {
+        println("Ошибка прочтения перечня признаков")
+        return ErrorClass.INIT_DEFAULT
+    }
+
+    try {
+        initAvailableValueClasses(path)
+
+    } catch (e: java.lang.Exception) {
+        println("Ошибка прочтения перечня областей допустимых значений")
+        return ErrorClass.INIT_DEFAULT
+    }
+
+    try {
+        initNormalValueClasses(path)
+        initAttributePictureForNormalValues()
+
+    } catch (e: java.lang.Exception) {
+        println("Ошибка прочтения перечня областей возможных значений")
+        return ErrorClass.INIT_DEFAULT
+    }
+
+    try {
+        initAttributePicture(path)
+
+    } catch (e: java.lang.Exception) {
+        println("Ошибка прочтения перечня значимых признаков для неисправностей")
+        return ErrorClass.INIT_DEFAULT
+    }
+
+    try {
+        initValuesByMalfunction(path)
+
+    } catch (e: java.lang.Exception) {
+        println("Ошибка прочтения перечня значений признаков при неисправности")
+        return ErrorClass.INIT_DEFAULT
+    }
+
+    return ErrorClass.NULL
 }

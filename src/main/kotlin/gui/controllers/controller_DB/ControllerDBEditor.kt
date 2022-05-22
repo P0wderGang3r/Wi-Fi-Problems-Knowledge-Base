@@ -1,8 +1,11 @@
 package gui.controllers.controller_DB
 
+import errors.ErrorClass
+import gui.ErrorView
 import gui.controllers.controller_DB.ControllerDBInteraction.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import lastError
 import tornadofx.Controller
 
 class ControllerDBEditor: Controller() {
@@ -45,14 +48,22 @@ class ControllerDBEditor: Controller() {
     }
 
     fun addInList(arguments: List<String>) {
-        currentDBController.addInList(arguments)
+        lastError = currentDBController.addInList(arguments)
+
+        if (lastError != ErrorClass.NULL) {
+            ErrorView().openModal()
+        }
     }
 
     fun editInList(defaultArguments: List<String>, arguments: List<String>) {
-        currentDBController.editInList(defaultArguments, arguments)
+        lastError = currentDBController.editInList(defaultArguments, arguments)
+        if (lastError != ErrorClass.NULL)
+            ErrorView().openModal()
     }
 
     fun removeFromList(arguments: List<String>) {
-        currentDBController.removeFromList(arguments)
+        lastError = currentDBController.removeFromList(arguments)
+        if (lastError != ErrorClass.NULL)
+            ErrorView().openModal()
     }
 }

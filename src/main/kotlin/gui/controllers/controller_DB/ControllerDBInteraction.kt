@@ -1,6 +1,7 @@
 package gui.controllers.controller_DB
 
 import database_functions.*
+import errors.ErrorClass
 import java.util.*
 
 enum class ControllerDBInteraction {
@@ -21,16 +22,16 @@ enum class ControllerDBInteraction {
             return emptyList()
         }
 
-        override fun addInList(values: List<String>) {
-
+        override fun addInList(values: List<String>): ErrorClass {
+            return ErrorClass.NULL
         }
 
-        override fun removeFromList(values: List<String>) {
-
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return ErrorClass.NULL
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return ErrorClass.NULL
         }
     },
 
@@ -56,16 +57,16 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addMalfunction(values[0].lowercase(Locale.getDefault()))
+        override fun addInList(values: List<String>): ErrorClass {
+            return addMalfunction(values[0].lowercase(Locale.getDefault()))
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeMalfunction(values[0].lowercase(Locale.getDefault()))
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeMalfunction(values[0].lowercase(Locale.getDefault()))
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editMalfunction(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editMalfunction(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
         }
     },
 
@@ -91,16 +92,16 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addAttribute(values[0].lowercase(Locale.getDefault()))
+        override fun addInList(values: List<String>): ErrorClass {
+            return addAttribute(values[0].lowercase(Locale.getDefault()))
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeAttribute(values[0].lowercase(Locale.getDefault()))
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeAttribute(values[0].lowercase(Locale.getDefault()))
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editAttribute(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editAttribute(defaultValues[0].lowercase(Locale.getDefault()), values[0].lowercase(Locale.getDefault()))
         }
     },
 
@@ -126,16 +127,16 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
+        override fun addInList(values: List<String>): ErrorClass {
+            return addAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeAvailableValue(values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()))
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editAvailableValue(
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editAvailableValue(
                 defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
             )
@@ -164,22 +165,22 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addNormalValue(
+        override fun addInList(values: List<String>): ErrorClass {
+            return addNormalValue(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault())
             )
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeNormalValue(
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeNormalValue(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault())
             )
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editNormalValue(
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editNormalValue(
                 defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault())
             )
@@ -208,22 +209,22 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addAttributePicture(
+        override fun addInList(values: List<String>): ErrorClass {
+            return addAttributePicture(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault())
             )
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeAttributeFromPicture(
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeAttributeFromPicture(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault())
             )
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editAttributePicture(
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editAttributePicture(
                 defaultValues[0].lowercase(Locale.getDefault()).lowercase(Locale.getDefault()),
                 defaultValues[1].lowercase(Locale.getDefault()).lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()),
@@ -254,22 +255,22 @@ enum class ControllerDBInteraction {
             return weightsOfFields
         }
 
-        override fun addInList(values: List<String>) {
-            addValuesByMalfunction(
+        override fun addInList(values: List<String>): ErrorClass {
+            return addValuesByMalfunction(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault()), values[2].lowercase(Locale.getDefault())
             )
         }
 
-        override fun removeFromList(values: List<String>) {
-            removeValueFromValuesByMalfunction(
+        override fun removeFromList(values: List<String>): ErrorClass {
+            return removeValueFromValuesByMalfunction(
                 values[0].lowercase(Locale.getDefault()),
                 values[1].lowercase(Locale.getDefault()), values[2].lowercase(Locale.getDefault())
             )
         }
 
-        override fun editInList(defaultValues: List<String>, values: List<String>) {
-            editValuesByMalfunction(
+        override fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass {
+            return editValuesByMalfunction(
                 defaultValues[0].lowercase(Locale.getDefault()), defaultValues[1].lowercase(Locale.getDefault()),
                 defaultValues[2].lowercase(Locale.getDefault()),
                 values[0].lowercase(Locale.getDefault()), values[1].lowercase(Locale.getDefault()),
@@ -282,7 +283,7 @@ enum class ControllerDBInteraction {
     abstract fun getNamesOfFields(): List<String>
     abstract fun getNumberOfFields(): Int
     abstract fun getWeightsOfFields(): List<Double>
-    abstract fun addInList(values: List<String>)
-    abstract fun removeFromList(values: List<String>)
-    abstract fun editInList(defaultValues: List<String>, values: List<String>)
+    abstract fun addInList(values: List<String>): ErrorClass
+    abstract fun removeFromList(values: List<String>): ErrorClass
+    abstract fun editInList(defaultValues: List<String>, values: List<String>): ErrorClass
 }
