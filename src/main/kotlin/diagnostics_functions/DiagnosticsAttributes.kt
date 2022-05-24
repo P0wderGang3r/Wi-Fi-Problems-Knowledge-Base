@@ -32,16 +32,18 @@ fun getAttributeValues(): List<String> {
     listOfValues.add("")
 
     for (attribute in attributes) {
-        for (value in attribute.availableValues) {
+        for (attributeValue in attribute.availableValues) {
             var isAlreadyAdded = false
 
             for (valueInList in listOfValues) {
-                if (value.equals(valueInList))
+                if (attributeValue.value.equals(valueInList)) {
                     isAlreadyAdded = true
+                    break
+                }
             }
 
             if (!isAlreadyAdded)
-                listOfValues.add(value)
+                listOfValues.add(attributeValue.value)
         }
     }
 

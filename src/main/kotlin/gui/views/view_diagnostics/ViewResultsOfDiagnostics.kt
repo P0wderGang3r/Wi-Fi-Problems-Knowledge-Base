@@ -15,7 +15,7 @@ class ViewResultsOfDiagnostics(sideController: ControllerDiagnostics): View() {
         data.asyncItems { sideController.getResults() }
 
         center = listview(data) {
-            minWidth = 500.0
+            minWidth = 600.0
         }
     }
 

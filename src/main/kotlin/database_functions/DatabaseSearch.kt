@@ -4,6 +4,7 @@ import attributePictures
 import attributes
 import data_classes.AttributeClass
 import data_classes.AttributePictureClass
+import data_classes.AttributeValueClass
 import data_classes.MalfunctionClass
 import data_classes.ValuesByAttributeClass
 import malfunctions
@@ -11,14 +12,14 @@ import malfunctions
 /**
  * Проверка, есть ли данное значение среди множества значений
  */
-fun findValue(value: String, values: ArrayList<String>): Boolean {
+fun findValue(value: String, values: ArrayList<AttributeValueClass>): AttributeValueClass? {
     for (valueInList in values) {
-        if (value.equals(valueInList)) {
-            return true
+        if (valueInList.value.equals(value)) {
+            return valueInList
         }
     }
 
-    return false
+    return null
 }
 
 /**

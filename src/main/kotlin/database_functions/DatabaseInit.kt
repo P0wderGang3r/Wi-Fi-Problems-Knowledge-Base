@@ -2,10 +2,7 @@ package database_functions
 
 import attributePictures
 import attributes
-import data_classes.AttributeClass
-import data_classes.AttributePictureClass
-import data_classes.MalfunctionClass
-import data_classes.ValuesByAttributeClass
+import data_classes.*
 import errors.ErrorClass
 import malfunctions
 import java.io.FileReader
@@ -95,7 +92,7 @@ fun initAvailableValueClasses(path: String): Boolean {
     for (value in rawValues) {
         for (attribute in attributes) {
             if (attribute.number == Integer.parseInt(value[0])) {
-                attribute.availableValues.add(value[1])
+                attribute.availableValues.add(AttributeValueClass(value[1]))
             }
         }
     }
@@ -112,7 +109,12 @@ fun initNormalValueClasses(path: String): Boolean {
     for (value in rawValues) {
         for (attribute in attributes) {
             if (attribute.number == Integer.parseInt(value[0])) {
-                attribute.normalValues.add(value[1])
+                for (availableValue in attribute.availableValues) {
+                    if (availableValue.value.equals(value[1])) {
+                        attribute.normalValues.add(availableValue)
+                        break
+                    }
+                }
             }
         }
     }
@@ -169,7 +171,11 @@ fun initValuesByMalfunction(path: String): Boolean {
                         val values = valueByMalfunction[2].split(" ; ")
 
                         for (value in values) {
-                            attributeInPicture.values.add(value)
+                            for (availableValue in attributeInPicture.attribute.availableValues) {
+                                if (availableValue.value.equals(value)) {
+                                    attributeInPicture.values.add(availableValue)
+                                }
+                            }
                         }
 
                     }

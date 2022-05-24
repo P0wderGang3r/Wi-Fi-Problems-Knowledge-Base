@@ -15,13 +15,13 @@ public class ValuesByAttributeClass {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private ArrayList<String> values = new ArrayList<String>();
+    private ArrayList<AttributeValueClass> values = new ArrayList<>();
 
-    public ArrayList<String> getValues() {
+    public ArrayList<AttributeValueClass> getValues() {
         return values;
     }
 
-    public void setValues(ArrayList<String> values) {
+    public void setValues(ArrayList<AttributeValueClass> values) {
         this.values = values;
     }
 

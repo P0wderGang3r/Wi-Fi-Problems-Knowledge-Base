@@ -2,10 +2,7 @@ package database_functions
 
 import attributePictures
 import attributes
-import data_classes.AttributeClass
-import data_classes.AttributePictureClass
-import data_classes.MalfunctionClass
-import data_classes.ValuesByAttributeClass
+import data_classes.*
 import errors.ErrorClass
 import malfunctions
 
@@ -50,16 +47,17 @@ fun addAvailableValue(attributeName: String, value: String): ErrorClass {
     val attribute = findAttribute(attributeName) ?: return ErrorClass.ADD_DEFAULT
 
     //Если значение уже существует, то отказ
-    if (findValue(value, attribute.availableValues)) {
+    if (findValue(value, attribute.availableValues) != null)
         return ErrorClass.ADD_DEFAULT
-    }
 
-    attribute.availableValues.add(value)
+    val newAttributeValue = AttributeValueClass(value)
+
+    attribute.availableValues.add(newAttributeValue)
 
     //Ограничение - если нормального значения не существует,
     // то добавляем в нормальные значения возможные значения
     if (attribute.normalValues.size == 0)
-        attribute.normalValues.add(value)
+        attribute.normalValues.add(newAttributeValue)
 
     return ErrorClass.NULL
 }
@@ -73,16 +71,22 @@ fun addNormalValue(attributeName: String, value: String): ErrorClass {
 
     val attribute = findAttribute(attributeName) ?: return ErrorClass.ADD_DEFAULT
 
-    //Если значение не из множества возможных значений, то отказ
-    if (!findValue(value, attribute.availableValues))
-        return ErrorClass.ADD_DEFAULT
+    //Ищем значение среди возможных значений
+    val newValue = findValue(value, attribute.availableValues) ?: return ErrorClass.ADD_DEFAULT
 
     //Если значение уже существует, то отказ
-    if (findValue(value, attribute.normalValues))
+    if (findValue(value, attribute.normalValues) != null)
         return ErrorClass.ADD_DEFAULT
 
+    //Проверяем, что новое значение не сломает логику существующих значений при неисправности
+    for (picture in attributePictures) {
+        for (valuesByMalfunction in picture.valuesByAttributes)
+            for (lValue in valuesByMalfunction.values)
+                if (lValue.equals(newValue))
+                    return ErrorClass.EDIT_DEFAULT
+    }
 
-    attribute.normalValues.add(value)
+    attribute.normalValues.add(newValue)
     return ErrorClass.NULL
 }
 
@@ -123,7 +127,7 @@ fun addAttributePicture(malfunctionName: String, attributeName: String): ErrorCl
  * Добавление нового признака в признаки при неисправности со значением из множества возможных значений
  */
 fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value: String): ErrorClass {
-    if (malfunctionName == "" ||attributeName == "" || value != "")
+    if (malfunctionName == "" ||attributeName == "" || value == "")
         return ErrorClass.ADD_DEFAULT
 
     val malfunction = findMalfunction(malfunctionName) ?: return ErrorClass.ADD_DEFAULT
@@ -131,11 +135,10 @@ fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value
 
     //Предварительно проверяем новое значение на то,
     // что оно есть среди множества возможных значений...
-    if (!findValue(value, attribute.availableValues))
-        return ErrorClass.ADD_DEFAULT
+    val newValue = findValue(value, attribute.availableValues) ?: return ErrorClass.ADD_DEFAULT
 
     // ... и отсутствует в множестве нормальных значений
-    if (findValue(value, attribute.normalValues))
+    if (findValue(value, attribute.normalValues) != null)
         return ErrorClass.ADD_DEFAULT
 
     var picture = findAttributePicture(malfunctionName)
@@ -152,14 +155,21 @@ fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value
 
     val attributeInPicture = findAttributeInPicture(picture, attributeName)
 
-    //Если признак в признаках при неисправности не существует, то добавляем
-    if (attributeInPicture == null) {
-        val newValuesByAttributes = ValuesByAttributeClass(attribute)
-        newValuesByAttributes.values.add(value)
-
-        picture.valuesByAttributes.add(newValuesByAttributes)
+    //Если признак был найден, то...
+    if (attributeInPicture != null) {
+        //...если новое значение отсутствует в картине мира...
+        if (findValue(value, attributeInPicture.values) != null) {
+            return ErrorClass.ADD_DEFAULT
+        }
+        //...то добавляем новое значение
+        attributeInPicture.values.add(newValue)
         return ErrorClass.NULL
     }
 
-    return ErrorClass.ADD_DEFAULT
+    //Если признак в признаках при неисправности не существует, то добавляем
+    val newValuesByAttributes = ValuesByAttributeClass(attribute)
+    newValuesByAttributes.values.add(newValue)
+
+    picture.valuesByAttributes.add(newValuesByAttributes)
+    return ErrorClass.NULL
 }

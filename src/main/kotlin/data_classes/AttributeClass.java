@@ -28,17 +28,17 @@ public class AttributeClass {
 
     //----------------------------------------------ВОЗМОЖНЫЕ ЗНАЧЕНИЯ--------------------------------------------------
 
-    private final ArrayList<String> availableValues = new ArrayList<String>();
+    private final ArrayList<AttributeValueClass> availableValues = new ArrayList<>();
 
-    public ArrayList<String> getAvailableValues() {
+    public ArrayList<AttributeValueClass> getAvailableValues() {
         return availableValues;
     }
 
     //---------------------------------------------НОРМАЛЬНЫЕ ЗНАЧЕНИЯ--------------------------------------------------
 
-    private final ArrayList<String> normalValues = new ArrayList<String>();
+    private final ArrayList<AttributeValueClass> normalValues = new ArrayList<>();
 
-    public ArrayList<String> getNormalValues() {
+    public ArrayList<AttributeValueClass> getNormalValues() {
         return normalValues;
     }
 

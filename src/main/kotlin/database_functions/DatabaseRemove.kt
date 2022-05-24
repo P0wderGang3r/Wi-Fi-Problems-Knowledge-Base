@@ -45,21 +45,24 @@ fun removeAttribute(attributeName: String): ErrorClass {
 fun removeAvailableValue(attributeName: String, value: String): ErrorClass {
     val currentAttribute = findAttribute(attributeName) ?: return ErrorClass.REMOVE_DEFAULT
 
-    if (findValue(value, currentAttribute.availableValues)) {
+    val removableValue = findValue(value, currentAttribute.availableValues) ?: return ErrorClass.REMOVE_DEFAULT
 
-        //Целостность данных - если количество возможных значений больше количества нормальных и...
-        if (currentAttribute.availableValues.size > currentAttribute.normalValues.size)
-            //удаляемое значение из множества нормальных значений, то отказ
-            if (findValue(value, currentAttribute.normalValues)) {
+    //Если данное значение есть среди значений при неисправности, то отказ
+    for (picture in attributePictures)
+        for (attribute in picture.valuesByAttributes)
+            if (findValue(removableValue.value, attribute.values) != null)
                 return ErrorClass.REMOVE_DEFAULT
-            }
 
-        currentAttribute.availableValues.remove(value)
 
-        return ErrorClass.NULL
-    }
+    //Целостность данных - если количество возможных значений больше количества нормальных и...
+    if (currentAttribute.availableValues.size > currentAttribute.normalValues.size)
+    //удаляемое значение из множества нормальных значений, то отказ
+        if (findValue(value, currentAttribute.normalValues) != null) {
+            return ErrorClass.REMOVE_DEFAULT
+        }
 
-    return ErrorClass.REMOVE_DEFAULT
+    currentAttribute.availableValues.remove(removableValue)
+    return ErrorClass.NULL
 }
 
 /**
@@ -68,17 +71,14 @@ fun removeAvailableValue(attributeName: String, value: String): ErrorClass {
 fun removeNormalValue(attributeName: String, value: String): ErrorClass {
     val currentAttribute = findAttribute(attributeName) ?: return ErrorClass.REMOVE_DEFAULT
 
-    if (findValue(value, currentAttribute.normalValues)) {
+    val removableValue = findValue(value, currentAttribute.normalValues) ?: return ErrorClass.REMOVE_DEFAULT
 
-        //Целостность данных - если нормальных значений задано не больше одного, то не удаляем
-        if (currentAttribute.normalValues.size <= 1)
-            return ErrorClass.REMOVE_DEFAULT
+    //Целостность данных - если нормальных значений задано не больше одного, то не удаляем
+    if (currentAttribute.normalValues.size <= 1)
+        return ErrorClass.REMOVE_DEFAULT
 
-        currentAttribute.normalValues.remove(value)
-        return ErrorClass.NULL
-    }
-
-    return ErrorClass.REMOVE_DEFAULT
+    currentAttribute.normalValues.remove(removableValue)
+    return ErrorClass.NULL
 }
 
 /**
@@ -116,12 +116,8 @@ fun removeValueFromValuesByMalfunction(malfunctionName: String, attributeName: S
     val attributeInPicture = findAttributeInPicture(picture, attributeName) ?: return ErrorClass.REMOVE_DEFAULT
 
     //Если находим значение в множестве значений признака при неисправности, то удаляем
-    for (lValue in attributeInPicture.values) {
-        if (lValue == value) {
-            attributeInPicture.values.remove(value)
-            return ErrorClass.NULL
-        }
-    }
+    val removableValue = findValue(value, attributeInPicture.values) ?: return ErrorClass.REMOVE_DEFAULT
 
-    return ErrorClass.REMOVE_DEFAULT
+    attributeInPicture.values.remove(removableValue)
+    return ErrorClass.NULL
 }

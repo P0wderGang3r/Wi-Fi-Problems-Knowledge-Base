@@ -30,11 +30,15 @@ private fun localGetAvailableValues(): List<String> {
         for (attributeValue in attribute.availableValues) {
             var isFound = false
 
-            if (findValue(attributeValue, lValues))
-                isFound = true
+            for (lValue in lValues) {
+                if (attributeValue.value == lValue) {
+                    isFound = true
+                    break
+                }
+            }
 
             if (!isFound)
-                lValues.add(attributeValue)
+                lValues.add(attributeValue.value)
         }
     }
 

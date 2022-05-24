@@ -32,8 +32,8 @@ fun getAvailableValues(): List<ControllerDBCrutch> {
     val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
     for (attribute in attributes) {
-        for (value in attribute.availableValues)
-            result.add(ControllerDBCrutch(attribute.name, value, ""))
+        for (attributeValue in attribute.availableValues)
+            result.add(ControllerDBCrutch(attribute.name, attributeValue.value, ""))
     }
 
     return result
@@ -43,8 +43,8 @@ fun getNormalValues(): List<ControllerDBCrutch> {
     val result: ArrayList<ControllerDBCrutch> = ArrayList()
 
     for (attribute in attributes) {
-        for (value in attribute.normalValues)
-            result.add(ControllerDBCrutch(attribute.name, value, ""))
+        for (attributeValue in attribute.normalValues)
+            result.add(ControllerDBCrutch(attribute.name, attributeValue.value, ""))
     }
 
     return result
@@ -66,12 +66,12 @@ fun getValuesByMalfunctions(): List<ControllerDBCrutch> {
 
     for (picture in attributePictures) {
         for (valuesByMalfunction in picture.valuesByAttributes) {
-            for (value in valuesByMalfunction.values)
+            for (attributeValue in valuesByMalfunction.values)
                 result.add(
                     ControllerDBCrutch(
                         picture.malfunction.name,
                         valuesByMalfunction.attribute.name,
-                        value
+                        attributeValue.value
                     )
                 )
             if (valuesByMalfunction.values.size == 0) {

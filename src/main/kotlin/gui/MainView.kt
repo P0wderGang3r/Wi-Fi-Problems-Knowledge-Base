@@ -68,6 +68,7 @@ class MainView: View() {
                     }
                 }
 
+                /*
                 hbox {
                     paddingLeft = 10.0
                     splitmenubutton("Сохранить в...") {
@@ -98,6 +99,7 @@ class MainView: View() {
                         }
                     }
                 }
+                 */
 
             }
         }
@@ -109,9 +111,11 @@ class MainView: View() {
 
             fitToParentSize()
 
+            /*
             tab("Описание БЗ") {
                 this.content = ViewDescription().root
             }
+             */
 
             tab("Редактор БЗ") {
                 this.content = ViewDBEditor().root

@@ -6,16 +6,19 @@ import java.util.*
 
 enum class ControllerDBInteraction {
     NULL {
+        private val namesOfFields = listOf("Множество значений сорта", "Error", "Error")
+        private val weightsOfFields = listOf(1.0, 0.0, 0.0)
+
         override fun getWeightsOfFields(): List<Double> {
-            return emptyList()
+            return weightsOfFields
         }
 
         override fun getNumberOfFields(): Int {
-            return 0
+            return 1
         }
 
         override fun getNamesOfFields(): List<String> {
-            return emptyList()
+            return namesOfFields
         }
 
         override fun getList(): List<ControllerDBCrutch> {

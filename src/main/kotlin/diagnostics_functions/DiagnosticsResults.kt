@@ -15,7 +15,7 @@ fun calculateIsCorrectAttributeValue(attributeName: String, valueName: String): 
     if (valueName == "")
         return true
 
-    if (!findValue(valueName, attribute.availableValues)) {
+    if (findValue(valueName, attribute.availableValues) == null) {
         return false
     }
 
@@ -35,9 +35,9 @@ fun checkAttributePictureValues(): ArrayList<String> {
                 if (diagnosticsVerdict.size == 0) {
                     diagnosticsVerdict.add("Ошибка вывода результата")
                     diagnosticsVerdict.add("")
-                    diagnosticsVerdict.add("Нарушена целостность базы знаний")
-                    diagnosticsVerdict.add("Следующим признакам не были заданы значения")
-                    diagnosticsVerdict.add("в множестве значений при неисправности:")
+                    diagnosticsVerdict.add("Нарушена целостность базы знаний.")
+                    diagnosticsVerdict.add("Множество значений при неисправности является")
+                    diagnosticsVerdict.add("пустым для следующих признаков при неисправностях:")
                 }
                 diagnosticsVerdict.add("${attribute.attribute.name} при ${picture.malfunction.name}")
             }
@@ -76,12 +76,16 @@ fun checkAttributeValues(): ArrayList<String> {
  */
 fun getDiagnosticsResults(): List<String> {
 
-    val diagnosticsVerdict: ArrayList<String> = checkAttributeValues()
+    var diagnosticsVerdict: ArrayList<String> = checkAttributeValues()
     val diagnosticsMalfunctionClasses: ArrayList<DiagnosticsMalfunctionClass> = ArrayList()
 
     if (diagnosticsVerdict.size != 0) {
         return diagnosticsVerdict
     }
+
+    diagnosticsVerdict = checkAttributePictureValues()
+    if (diagnosticsVerdict.size != 0)
+        return diagnosticsVerdict
 
     diagnosticsVerdict.add("Отчёт о совпадении с классами неисправностей")
     diagnosticsVerdict.add("")
@@ -103,7 +107,7 @@ fun getDiagnosticsResults(): List<String> {
                     //Проверяем каждое поле признака
                     for (valueByMalfunction in valuesByAttribute.values) {
                         //Если совпадает с одним из значений при неисправности, то добавляем как корректный
-                        if (valueByMalfunction.equals(diagnosticsEntry.value)) {
+                        if (valueByMalfunction.value.equals(diagnosticsEntry.value)) {
                             diagnosticsVerdict.add("|->| ${diagnosticsEntry.attribute.name}")
                             numOfCorrectAttributes += 1
                             break
