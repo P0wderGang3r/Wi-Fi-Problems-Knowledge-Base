@@ -2,11 +2,7 @@ package database_functions
 
 import attributePictures
 import attributes
-import data_classes.AttributeClass
-import data_classes.AttributePictureClass
-import data_classes.AttributeValueClass
-import data_classes.MalfunctionClass
-import data_classes.ValuesByAttributeClass
+import data_classes.*
 import malfunctions
 
 /**

@@ -12,7 +12,7 @@ class ViewDBAddElement(sideController: ControllerDBEditor, parentTableView: Tabl
 
     override val root = vbox {
         title = "Добавление нового элемента"
-        minWidth = 100.0
+        minWidth = 400.0
         paddingAll = 10.0
         paddingBottom = 15.0
 

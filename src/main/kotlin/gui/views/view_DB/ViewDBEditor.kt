@@ -7,7 +7,6 @@ import javafx.geometry.Pos
 import javafx.scene.text.FontWeight
 import javafx.scene.text.TextAlignment
 import tornadofx.*
-import javax.swing.GroupLayout.Alignment
 
 class ViewDBEditor: View() {
     private val sideController: ControllerDBEditor by inject()

@@ -1,7 +1,6 @@
 package gui
 
 import gui.controllers.ControllerMain
-import gui.views.ViewDescription
 import gui.views.ViewHelp
 import gui.views.view_DB.ViewDBEditor
 import gui.views.view_diagnostics.ViewDiagnostics

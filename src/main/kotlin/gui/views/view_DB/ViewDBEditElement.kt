@@ -15,7 +15,7 @@ class ViewDBEditElement(sideController: ControllerDBEditor, parentTableView: Tab
 
     override val root = vbox {
         title = "Изменение значений элемента"
-        minWidth = 100.0
+        minWidth = 400.0
         paddingAll = 10.0
         paddingBottom = 15.0
 

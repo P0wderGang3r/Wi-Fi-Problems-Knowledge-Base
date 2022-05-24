@@ -1,7 +1,6 @@
 package gui
 
 import errors.ErrorClass
-import javafx.scene.Parent
 import lastError
 import tornadofx.View
 import tornadofx.asObservable
