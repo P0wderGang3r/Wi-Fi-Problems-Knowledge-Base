@@ -97,10 +97,6 @@ fun editAttributePicture(malfunctionName: String, attributeName: String,
 
     val picture = findAttributePicture(malfunctionName) ?: return ErrorClass.EDIT_DEFAULT
 
-    //Если признаковая картина не редактируема, то отказ
-    if (!picture.isEditable)
-        return ErrorClass.EDIT_DEFAULT
-
     //Изменение названия неисправности
     picture.malfunction.name = newMalfunctionName
 
@@ -121,9 +117,6 @@ fun editValuesByMalfunction(malfunctionName: String, attributeName: String, valu
         return ErrorClass.EDIT_DEFAULT
 
     val picture = findAttributePicture(malfunctionName) ?: return ErrorClass.EDIT_DEFAULT
-
-    if (!picture.isEditable)
-        return ErrorClass.EDIT_DEFAULT
 
     val valuesByMalfunction = findAttributeInPicture(picture, attributeName) ?: return ErrorClass.EDIT_DEFAULT
 

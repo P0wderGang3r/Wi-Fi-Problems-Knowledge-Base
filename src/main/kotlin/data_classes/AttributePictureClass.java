@@ -13,15 +13,6 @@ public class AttributePictureClass {
         this.malfunction = malfunction;
     }
 
-    private boolean isEditable = true;
-
-    public boolean isEditable() {
-        return isEditable;
-    }
-
-    public void setEditable(boolean editable) {
-        isEditable = editable;
-    }
 
     //------------------------------------------------------------------------------------------------------------------
 

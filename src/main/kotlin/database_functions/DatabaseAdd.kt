@@ -30,7 +30,8 @@ fun addAttribute(attributeName: String): ErrorClass {
         return ErrorClass.ADD_DEFAULT
 
     if (findAttribute(attributeName) == null) {
-        attributes.add(AttributeClass(0, attributeName))
+        val newAttribute = AttributeClass(0, attributeName)
+        attributes.add(newAttribute)
         return ErrorClass.NULL
     }
 
@@ -108,10 +109,6 @@ fun addAttributePicture(malfunctionName: String, attributeName: String): ErrorCl
         attributePictures.add(picture)
     }
 
-    //Если признаковая картина не редактируема, то отказ
-    if (!picture.isEditable)
-        return ErrorClass.ADD_DEFAULT
-
     val attributeInPicture = findAttributeInPicture(picture, attributeName)
 
     //Если признак в признаках при неисправности не существует, то добавляем
@@ -148,10 +145,6 @@ fun addValuesByMalfunction(malfunctionName: String, attributeName: String, value
         picture = AttributePictureClass(malfunction)
         attributePictures.add(picture)
     }
-
-    //Если признаковая картина не редактируема, то отказ
-    if (!picture.isEditable)
-        return ErrorClass.ADD_DEFAULT
 
     val attributeInPicture = findAttributeInPicture(picture, attributeName)
 

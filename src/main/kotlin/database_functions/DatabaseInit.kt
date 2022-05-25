@@ -189,28 +189,6 @@ fun initValuesByMalfunction(path: String): Boolean {
     return true
 }
 
-/**
- * Привязка/создание картины признаков при исправной работе с нормальными значениями признаков
- */
-fun initAttributePictureForNormalValues() {
-    var currMalfunction = MalfunctionClass(0, "работает исправно")
-    for (malfunction in malfunctions)
-        if (malfunction.number == 0) {
-            currMalfunction = malfunction
-            break
-        }
-
-    attributePictures.add(AttributePictureClass(currMalfunction))
-    attributePictures[attributePictures.size - 1].isEditable = false
-
-    for (attribute in attributes)
-        attributePictures[attributePictures.size - 1].valuesByAttributes.add(ValuesByAttributeClass(attribute))
-
-    for (valuesByAttribute in attributePictures[attributePictures.size - 1].valuesByAttributes) {
-        valuesByAttribute.values = valuesByAttribute.attribute.normalValues
-    }
-}
-
 fun clearDataBase() {
     attributePictures.clear()
     malfunctions.clear()
@@ -256,7 +234,7 @@ fun initDataBase(inpPath: String): ErrorClass {
 
     try {
         initNormalValueClasses(path)
-        initAttributePictureForNormalValues()
+        //initAttributePictureForNormalValues()
 
     } catch (e: java.lang.Exception) {
         println("Ошибка прочтения перечня областей возможных значений")
